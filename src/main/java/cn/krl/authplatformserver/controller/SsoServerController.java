@@ -6,13 +6,15 @@ package cn.krl.authplatformserver.controller;
  * @date 2021/11/11 14:18
  */
 import cn.dev33.satoken.config.SaTokenConfig;
+import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.sso.SaSsoHandle;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
+import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.model.vo.User;
 import cn.krl.authplatformserver.service.IUserService;
 import com.ejlchina.okhttps.OkHttps;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 /** Sa-Token-SSO Server端 Controller */
 @RestController
 @Api(tags = "单点登录")
+@Slf4j
 public class SsoServerController {
 
     @Autowired private IUserService userService;
@@ -49,14 +52,19 @@ public class SsoServerController {
         // 配置：登录处理函数
         cfg.sso.setDoLoginHandle(
                 (name, pwd) -> {
-                    System.out.println(name + " " + pwd);
+                    ResponseWrapper responseWrapper;
+                    String phone = SaHolder.getRequest().getParam("phone");
                     // 此处仅做模拟登录，真实环境应该查询数据进行登录
-                    if (userService.loginCheck(name, pwd)) {
-                        User user = userService.getUserByPhone(name);
+                    if (userService.loginCheck(phone, pwd)) {
+                        User user = userService.getUserByPhone(phone);
                         StpUtil.login(user.getId());
-                        return SaResult.ok("登录成功！").setData(StpUtil.getTokenValue());
+                        responseWrapper = ResponseWrapper.markSuccess();
+                        responseWrapper.setExtra("token", StpUtil.getTokenValue());
+                        log.info(phone + "登录成功");
+                        return responseWrapper;
                     }
-                    return SaResult.error("登录失败！");
+                    log.info(phone + "登录失败，电话号码或者密码错误");
+                    return ResponseWrapper.markAccountError();
                 });
 
         // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）

@@ -12,6 +12,7 @@ public enum ResponseCode {
     NODATA(201, "操作成功，但无记录"),
     DATA_EXISTED(202, "操作成功，但记录已存在"),
     REDIRECT(302, "重定向"),
+
     /** 400 ~ 599 判定为前端可自定义异常处理的普通异常 */
     FAILED(400, "操作失败"),
     ACCOUNT_ERROR(401, "账户或密码错误"),
@@ -26,7 +27,7 @@ public enum ResponseCode {
     EXCEL_OTHERERROR(410, "excel导入其他错误"),
     SYSTEM_ERROR(500, "系统异常"),
     /** 900以上，判定为前端同一处理的异常 */
-    API_NOT_PER(999, "没有该接口的访问权限");
+    API_NOT_PER(900, "没有该接口的访问权限");
     private int code;
     private String msg;
 

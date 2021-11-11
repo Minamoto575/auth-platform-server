@@ -11,6 +11,5 @@ public class AuthPlatformServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(AuthPlatformServerApplication.class, args);
         log.info("------统一认证平台服务启动成功！------");
-
     }
 }

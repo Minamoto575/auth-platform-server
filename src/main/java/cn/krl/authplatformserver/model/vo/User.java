@@ -10,17 +10,13 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 /**
- * <p>
- * 
- * </p>
- *
  * @author kuang
  * @since 2021-11-11
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="SysUser对象", description="")
-public class SysUser implements Serializable {
+@ApiModel(value = "User对象", description = "")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,9 +24,9 @@ public class SysUser implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "用户ID，保证唯一性（系统内部使用，防止主键id在数据库迁移或者合并之后因为自增会发生变动）")
-    private String userId;
+    private String phone;
 
-    @ApiModelProperty(value = "用户名(手机号)")
+    @ApiModelProperty(value = "用户名")
     private String username;
 
     @ApiModelProperty(value = "统一登录密码")
@@ -43,18 +39,17 @@ public class SysUser implements Serializable {
     private String salt;
 
     @ApiModelProperty(value = "注册时间")
-    private String gmtCreate;
+    private Long gmtCreate;
 
     @ApiModelProperty(value = "最新修改时间")
-    private String gmtModifed;
+    private Long gmtModifed;
 
     @ApiModelProperty(value = "禁用")
-    private String disabled;
+    private Boolean disabled;
 
     @ApiModelProperty(value = "邮箱")
     private String email;
 
     @ApiModelProperty(value = "最新的登录ip")
     private String lastIp;
-
 }

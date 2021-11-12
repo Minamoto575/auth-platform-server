@@ -5,13 +5,12 @@ package cn.krl.authplatformserver.controller;
  * @description
  * @date 2021/11/11 14:18
  */
-
 import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.sso.SaSsoHandle;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
-import cn.krl.authplatformserver.model.vo.User;
+import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;

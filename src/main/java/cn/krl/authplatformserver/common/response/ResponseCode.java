@@ -26,6 +26,7 @@ public enum ResponseCode {
     EMAIL_EXIST(409, "该邮箱已被使用"),
     EMAIL_ERROR(410, "非法的邮箱格式"),
     PHONE_ERROR(411, "非法的电话格式"),
+    VERIFYCODE_ERROR(412, "验证码获取失败"),
     SYSTEM_ERROR(500, "系统异常"),
     /**
      * 900以上，判定为前端同一处理的异常

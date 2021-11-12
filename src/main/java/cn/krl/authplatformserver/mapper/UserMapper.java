@@ -1,6 +1,6 @@
 package cn.krl.authplatformserver.mapper;
 
-import cn.krl.authplatformserver.model.vo.User;
+import cn.krl.authplatformserver.model.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

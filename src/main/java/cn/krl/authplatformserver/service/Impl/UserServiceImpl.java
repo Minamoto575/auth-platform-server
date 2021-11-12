@@ -4,7 +4,7 @@ import cn.krl.authplatformserver.common.utils.SaltUtil;
 import cn.krl.authplatformserver.mapper.UserMapper;
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
-import cn.krl.authplatformserver.model.vo.User;
+import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

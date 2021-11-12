@@ -149,6 +149,16 @@ public class ResponseWrapper {
     }
 
     /**
+     * 验证码获取失败
+     */
+    public static ResponseWrapper markVerifyCodeError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.VERIFYCODE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.VERIFYCODE_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
      * 密码错误
      *
      * @return

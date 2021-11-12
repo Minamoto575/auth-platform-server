@@ -2,7 +2,7 @@ package cn.krl.authplatformserver.service;
 
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
-import cn.krl.authplatformserver.model.vo.User;
+import cn.krl.authplatformserver.model.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

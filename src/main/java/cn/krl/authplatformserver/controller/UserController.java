@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 @Api(tags = "用户的api")
 @Slf4j
+@CrossOrigin
 public class UserController {
     @Autowired private IUserService userService;
 
@@ -90,6 +91,7 @@ public class UserController {
             userService.changePwd(phone, newPwd);
             return ResponseWrapper.markSuccess();
         } catch (Exception e) {
+            log.error(phone + "更改密码失败");
             return ResponseWrapper.markError();
         }
 

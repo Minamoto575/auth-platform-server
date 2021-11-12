@@ -24,8 +24,12 @@ public enum ResponseCode {
     PHONE_EXIST(407, "该电话已被使用"),
     PASSWORD_ERROR(408, "密码错误"),
     EMAIL_EXIST(409, "该邮箱已被使用"),
+    EMAIL_ERROR(410, "非法的邮箱格式"),
+    PHONE_ERROR(411, "非法的电话格式"),
     SYSTEM_ERROR(500, "系统异常"),
-    /** 900以上，判定为前端同一处理的异常 */
+    /**
+     * 900以上，判定为前端同一处理的异常
+     */
     API_NOT_PER(900, "没有该接口的访问权限");
     private int code;
     private String msg;

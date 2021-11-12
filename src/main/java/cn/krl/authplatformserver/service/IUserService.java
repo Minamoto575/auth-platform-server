@@ -1,6 +1,7 @@
 package cn.krl.authplatformserver.service;
 
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
+import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.vo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -54,10 +55,27 @@ public interface IUserService extends IService<User> {
     boolean phoneExists(String phone);
 
     /**
-     * @description 检查email是否被使用
      * @param email: 邮箱
+     * @description 检查email是否被使用
      * @return: boolean
      * @data 2021/11/12
      */
     boolean emailExists(String email);
+
+    /**
+     * @param userUpdateDTO: 信息表单
+     * @description 更新用户信息  不做验证 开放给管理员用
+     * @return: void
+     * @data 2021/11/12
+     */
+    void updateUser(UserUpdateDTO userUpdateDTO);
+
+    /**
+     * @param phone:  电话号码
+     * @param newPwd: 新密码
+     * @description 修改密码
+     * @return: void
+     * @data 2021/11/12
+     */
+    void changePwd(String phone, String newPwd);
 }

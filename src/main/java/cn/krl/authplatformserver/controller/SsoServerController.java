@@ -5,6 +5,7 @@ package cn.krl.authplatformserver.controller;
  * @description
  * @date 2021/11/11 14:18
  */
+
 import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.sso.SaSsoHandle;
@@ -12,7 +13,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.model.vo.User;
 import cn.krl.authplatformserver.service.IUserService;
-import com.ejlchina.okhttps.OkHttps;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,40 +39,37 @@ public class SsoServerController {
     @Autowired
     private void configSso(SaTokenConfig cfg) {
         // 配置：未登录时返回的View
-        // cfg.sso.setNotLoginView(
-        //         () -> {
-        //             String msg =
-        //                     "当前会话在SSO-Server端尚未登录，请先访问"
-        //                             + "<a href='/sso/doLogin?name=sa&pwd=123456' target='_blank'>
-        // doLogin登录 </a>"
-        //                             + "进行登录之后，刷新页面开始授权";
-        //             return msg;
-        //         });
+        cfg.sso.setNotLoginView(
+            () -> {
+                String msg =
+                    "当前会话在SSO-Server端尚未登录，请先访问"
+                        + "<a href='/sso/doLogin?phone=17388888888&pwd=123456' target='_blank'> doLogin登录</a > "
+                        + "进行登录之后，刷新页面开始授权";
+                return msg;
+            });
 
         // 配置：登录处理函数
         cfg.sso.setDoLoginHandle(
-                (name, pwd) -> {
-                    ResponseWrapper responseWrapper;
-                    String phone = SaHolder.getRequest().getParam("phone");
-                    // 此处仅做模拟登录，真实环境应该查询数据进行登录
-                    if (userService.loginCheck(phone, pwd)) {
-                        User user = userService.getUserByPhone(phone);
-                        StpUtil.login(user.getId());
-                        responseWrapper = ResponseWrapper.markSuccess();
-                        responseWrapper.setExtra("token", StpUtil.getTokenValue());
-                        log.info(phone + "登录成功");
-                        return responseWrapper;
-                    }
-                    log.info(phone + "登录失败，电话号码或者密码错误");
-                    return ResponseWrapper.markAccountError();
-                });
+            (name, pwd) -> {
+                ResponseWrapper responseWrapper;
+                String phone = SaHolder.getRequest().getParam("phone");
+                if (userService.loginCheck(phone, pwd)) {
+                    User user = userService.getUserByPhone(phone);
+                    StpUtil.login(user.getId());
+                    responseWrapper = ResponseWrapper.markSuccess();
+                    responseWrapper.setExtra("token", StpUtil.getTokenValue());
+                    log.info(phone + "登录成功");
+                    return responseWrapper;
+                }
+                log.info(phone + "登录失败，电话号码或者密码错误");
+                return ResponseWrapper.markAccountError();
+            });
 
         // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）
-        cfg.sso.setSendHttp(
-                url -> {
-                    return OkHttps.sync(url).get().getBody().toString();
-                });
+        // cfg.sso.setSendHttp(
+        //         url -> {
+        //             return OkHttps.sync(url).get().getBody().toString();
+        //         });
     }
 
-    private class UserService {}
 }

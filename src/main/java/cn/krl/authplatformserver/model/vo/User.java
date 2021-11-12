@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "User对象", description = "")
+@ApiModel(value = "User对象", description = "统一登陆的用户实体类")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

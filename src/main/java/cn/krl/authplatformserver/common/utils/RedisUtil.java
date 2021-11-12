@@ -1,5 +1,12 @@
 package cn.krl.authplatformserver.common.utils;
 
+
+/**
+ * @author kuang
+ * @description redis工具类
+ * @date 2021/11/11  13:19
+ */
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

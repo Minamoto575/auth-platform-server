@@ -1,7 +1,9 @@
 package cn.krl.authplatformserver.controller;
 
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
+import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
+import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,5 +50,48 @@ public class UserController {
             e.printStackTrace();
         }
         return responseWrapper;
+    }
+
+    @PostMapping("/update")
+    @ApiOperation("用户更新")
+    @ResponseBody
+    public ResponseWrapper updateUser(@RequestBody @Validated UserUpdateDTO updateDTO) {
+        String phone = updateDTO.getPhone();
+        String email = updateDTO.getEmail();
+        if (!RegexUtil.isBlank(phone) && !RegexUtil.isLegalPhone(phone)) {
+            log.warn("用户:" + updateDTO.getId() + "更新失败,错误的电话格式");
+            return ResponseWrapper.markPhoneError();
+        }
+        if (!RegexUtil.isBlank(email) && !RegexUtil.isLegalPhone(email)) {
+            log.warn("用户:" + updateDTO.getId() + "更新失败,错误的邮箱格式");
+            return ResponseWrapper.markEmailError();
+        }
+        try {
+            userService.updateUser(updateDTO);
+            log.info("用户:" + updateDTO.getId() + "更新成功");
+            return ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error("用户:" + updateDTO.getId() + "更新失败");
+            return ResponseWrapper.markError();
+        }
+    }
+
+    @PutMapping("/changePwd")
+    @ApiOperation("用户更改密码")
+    @ResponseBody
+    public ResponseWrapper changePwd(@RequestParam String phone, @RequestParam String oldPwd,
+                                     @RequestParam String newPwd) {
+        ResponseWrapper responseWrapper;
+        if (!userService.loginCheck(phone, oldPwd)) {
+            log.warn(phone + "旧密码验证失败");
+            return ResponseWrapper.markAccountError();
+        }
+        try {
+            userService.changePwd(phone, newPwd);
+            return ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            return ResponseWrapper.markError();
+        }
+
     }
 }

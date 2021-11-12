@@ -117,11 +117,34 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.PHONE_EXIST.getMsg());
         return responseWrapper;
     }
-    /** 电话已被使用 */
+
+    /**
+     * 邮箱已被使用
+     */
     public static ResponseWrapper markEmailExist() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.EMAIL_EXIST.getCode());
         responseWrapper.setMsg(ResponseCode.EMAIL_EXIST.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 非法的电话格式
+     */
+    public static ResponseWrapper markPhoneError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.PHONE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.PHONE_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 非法的邮箱格式
+     */
+    public static ResponseWrapper markEmailError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.EMAIL_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.EMAIL_ERROR.getMsg());
         return responseWrapper;
     }
 

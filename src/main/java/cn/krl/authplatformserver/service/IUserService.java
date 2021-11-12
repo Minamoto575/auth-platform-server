@@ -44,4 +44,20 @@ public interface IUserService extends IService<User> {
      * @data 2021/11/11
      */
     void registerUser(RegisterDTO registerDTO);
+
+    /**
+     * @description 检查电话号码是否被注册
+     * @param phone: 电话号码
+     * @return: boolean
+     * @data 2021/11/12
+     */
+    boolean phoneExists(String phone);
+
+    /**
+     * @description 检查email是否被使用
+     * @param email: 邮箱
+     * @return: boolean
+     * @data 2021/11/12
+     */
+    boolean emailExists(String email);
 }

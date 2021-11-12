@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.List;
+
 /**
  * 用户服务实现类
  *
@@ -64,5 +66,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setDisabled(false);
         user.setExpired(false);
         userMapper.insert(user);
+    }
+
+    @Override
+    public boolean phoneExists(String phone) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("phone", phone);
+        List<User> users = userMapper.selectList(queryWrapper);
+        return !users.isEmpty();
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("email", email);
+        List<User> users = userMapper.selectList(queryWrapper);
+        return !users.isEmpty();
     }
 }

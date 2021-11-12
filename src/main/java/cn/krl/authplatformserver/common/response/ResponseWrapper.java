@@ -110,11 +110,18 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /** 用户名已被使用 */
-    public static ResponseWrapper markAdminExist() {
+    /** 电话已被使用 */
+    public static ResponseWrapper markPhoneExist() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
-        responseWrapper.setCode(ResponseCode.ADMIN_EXIST.getCode());
-        responseWrapper.setMsg(ResponseCode.ADMIN_EXIST.getMsg());
+        responseWrapper.setCode(ResponseCode.PHONE_EXIST.getCode());
+        responseWrapper.setMsg(ResponseCode.PHONE_EXIST.getMsg());
+        return responseWrapper;
+    }
+    /** 电话已被使用 */
+    public static ResponseWrapper markEmailExist() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.EMAIL_EXIST.getCode());
+        responseWrapper.setMsg(ResponseCode.EMAIL_EXIST.getMsg());
         return responseWrapper;
     }
 
@@ -127,30 +134,6 @@ public class ResponseWrapper {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.PASSWORD_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.PASSWORD_ERROR.getMsg());
-        return responseWrapper;
-    }
-
-    /**
-     * excel导入自定义错误
-     *
-     * @return
-     */
-    public static ResponseWrapper markExcelCustomError() {
-        ResponseWrapper responseWrapper = new ResponseWrapper();
-        responseWrapper.setCode(ResponseCode.EXCEL_CUSTOMERROR.getCode());
-        responseWrapper.setMsg(ResponseCode.EXCEL_CUSTOMERROR.getMsg());
-        return responseWrapper;
-    }
-
-    /**
-     * excel导入其他错误
-     *
-     * @return
-     */
-    public static ResponseWrapper markExcelOtherError() {
-        ResponseWrapper responseWrapper = new ResponseWrapper();
-        responseWrapper.setCode(ResponseCode.EXCEL_OTHERERROR.getCode());
-        responseWrapper.setMsg(ResponseCode.EXCEL_OTHERERROR.getMsg());
         return responseWrapper;
     }
 

@@ -28,13 +28,23 @@ public class UserController {
     @ResponseBody
     public ResponseWrapper registerUser(@RequestBody @Validated RegisterDTO registerDTO) {
         ResponseWrapper responseWrapper;
+        String phone = registerDTO.getPhone();
+        String email = registerDTO.getEmail();
+        if (userService.phoneExists(phone)) {
+            log.warn(phone + "电话已被注册，注册失败！");
+            return ResponseWrapper.markPhoneExist();
+        }
+        if (userService.emailExists(email)) {
+            log.warn(email + "邮箱已被使用，注册失败！");
+            return ResponseWrapper.markEmailExist();
+        }
         try {
             userService.registerUser(registerDTO);
-            log.info(registerDTO.getPhone() + "注册成功");
+            log.info(phone + "注册成功");
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
             responseWrapper = ResponseWrapper.markError();
-            log.error(registerDTO.getPhone() + "注册失败");
+            log.error(phone + "注册失败");
             e.printStackTrace();
         }
         return responseWrapper;

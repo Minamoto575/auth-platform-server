@@ -2,7 +2,7 @@ package cn.krl.authplatformserver.common.utils;
 
 /**
  * @author kuang
- * @description 验证码生成的随机工具类
+ * @description 图像验证码生成的随机工具类
  * @date 2021/11/12  17:04
  */
 

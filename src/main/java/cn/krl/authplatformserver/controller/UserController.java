@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 前端控制器
+ * 用户前端控制器
  *
  * @author kuang
  * @since 2021-11-11
@@ -24,8 +24,15 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @CrossOrigin
 public class UserController {
-    @Autowired private IUserService userService;
+    @Autowired
+    private IUserService userService;
 
+    /**
+     * @param registerDTO: 用户注册提交的表单 数据的要求详情见RegisterDTO
+     * @description 用户注册方法
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/14
+     */
     @PostMapping("/register")
     @ApiOperation("用户注册")
     @ResponseBody
@@ -53,6 +60,12 @@ public class UserController {
         return responseWrapper;
     }
 
+    /**
+     * @param updateDTO: 用户更新的数据表单 要求详情见UserUpdateDTO
+     * @description 用户更新方法，不做任何检验，开发给管理员
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/14
+     */
     @PostMapping("/update")
     @ApiOperation("用户更新")
     @ResponseBody
@@ -77,6 +90,14 @@ public class UserController {
         }
     }
 
+    /**
+     * @param phone:  电话号码 当作用户的账号
+     * @param oldPwd: 验证旧密码
+     * @param newPwd: 新密码
+     * @description 用户更改密码的方法
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/14
+     */
     @PutMapping("/changePwd")
     @ApiOperation("用户更改密码")
     @ResponseBody

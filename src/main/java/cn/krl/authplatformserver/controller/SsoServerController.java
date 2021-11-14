@@ -27,7 +27,7 @@ public class SsoServerController {
     @Autowired private IUserService userService;
 
     /*
-     * SSO-Server端：处理所有SSO相关请求 (下面的章节我们会详细列出开放的接口)
+     * SSO-Server端：处理所有SSO相关请求
      */
     @RequestMapping("/sso/*")
     public Object ssoRequest() {

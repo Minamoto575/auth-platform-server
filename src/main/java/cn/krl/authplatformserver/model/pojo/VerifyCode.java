@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @author kuang
- * @description 验证码
+ * @description 图形验证码
  * @date 2021/11/12  16:56
  */
 @Data

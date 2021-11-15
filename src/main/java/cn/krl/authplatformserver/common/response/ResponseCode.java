@@ -27,6 +27,11 @@ public enum ResponseCode {
     EMAIL_ERROR(410, "非法的邮箱格式"),
     PHONE_ERROR(411, "非法的电话格式"),
     VERIFYCODE_ERROR(412, "验证码获取失败"),
+    CHANGEPHONE_ERROR(413, "修改电话失败"),
+    CHANGEPWD_ERROR(414, "修改密码失败"),
+    UPDATEUSER_ERROR(415, "更新用户失败"),
+    MESSAGE_ERROR(416, "短信发送失败"),
+    REGISTER_ERROR(417, "注册失败"),
     SYSTEM_ERROR(500, "系统异常"),
     /**
      * 900以上，判定为前端同一处理的异常

@@ -78,4 +78,13 @@ public interface IUserService extends IService<User> {
      * @data 2021/11/12
      */
     void changePwd(String phone, String newPwd);
+
+    /**
+     * @param id:    用户id
+     * @param phone: 新的电话
+     * @description 修改绑定的电话号码
+     * @return: void
+     * @data 2021/11/15
+     */
+    void changePhone(String id, String phone);
 }

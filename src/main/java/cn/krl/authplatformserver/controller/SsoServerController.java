@@ -64,6 +64,13 @@ public class SsoServerController {
                 return ResponseWrapper.markAccountError();
             });
 
+        // http://{host}:{port}/sso/logout
+        // 参数	是否必填	说明
+        // loginId	否	要注销的账号id
+        // secretkey	否	接口通信秘钥
+        // back	否	注销成功后的重定向地址
+
+
         // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）
         // cfg.sso.setSendHttp(
         //         url -> {

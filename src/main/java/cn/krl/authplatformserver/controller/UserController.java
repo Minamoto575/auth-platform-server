@@ -53,7 +53,7 @@ public class UserController {
             log.info(phone + "注册成功");
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
-            responseWrapper = ResponseWrapper.markError();
+            responseWrapper = ResponseWrapper.markRegisterError();
             log.error(phone + "注册失败");
             e.printStackTrace();
         }
@@ -86,7 +86,7 @@ public class UserController {
             return ResponseWrapper.markSuccess();
         } catch (Exception e) {
             log.error("用户:" + updateDTO.getId() + "更新失败");
-            return ResponseWrapper.markError();
+            return ResponseWrapper.markUpdateUserError();
         }
     }
 
@@ -110,11 +110,29 @@ public class UserController {
         }
         try {
             userService.changePwd(phone, newPwd);
-            return ResponseWrapper.markSuccess();
+            responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
             log.error(phone + "更改密码失败");
-            return ResponseWrapper.markError();
+            responseWrapper = ResponseWrapper.markChangePwdError();
         }
-
+        return responseWrapper;
     }
+
+    @PutMapping("/changePhone")
+    @ApiOperation("用户更改电话")
+    @ResponseBody
+    public ResponseWrapper changePwd(@RequestParam String id, @RequestParam String phone) {
+        ResponseWrapper responseWrapper;
+        try {
+            userService.changePhone(id, phone);
+            log.info("用户id：" + id + "成功修改新的电话：" + phone);
+            responseWrapper = ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error("用户id：" + id + "修改新的电话：" + phone + "失败");
+            responseWrapper = ResponseWrapper.markChangePhoneError();
+        }
+        return responseWrapper;
+    }
+
+
 }

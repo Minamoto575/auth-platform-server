@@ -171,9 +171,70 @@ public class ResponseWrapper {
     }
 
     /**
+     * 修改密码失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markChangePwdError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.CHANGEPWD_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.CHANGEPWD_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 修改电话失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markChangePhoneError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.CHANGEPHONE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.CHANGEPHONE_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 更新用户失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markUpdateUserError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.UPDATEUSER_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.UPDATEUSER_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 短信发送失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markMessageError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.MESSAGE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.MESSAGE_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 注册·失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markRegisterError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.REGISTER_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.REGISTER_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+
+    /**
      * 包装ResponseWrapper
      *
-     * @param tag Tag名称
+     * @param tag       Tag名称
      * @param jsonArray JSON数据
      * @return ResponseWrapper
      */

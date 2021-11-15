@@ -47,7 +47,6 @@ public class VerifyCodeController {
         try {
             //设置长宽
             VerifyCode verifyCode = verifyCodeService.generate(80, 28);
-            int a = 1 / 0;
             String code = verifyCode.getCode();
             log.info("生成登录验证码：" + code);
             //将VerifyCode绑定session
@@ -93,7 +92,7 @@ public class VerifyCodeController {
             responseWrapper.setExtra("messageCode", messageCode);
         } else {
             log.info("短信发送失败" + message);
-            responseWrapper = ResponseWrapper.markDefault(999, message);
+            responseWrapper = ResponseWrapper.markMessageError();
         }
         return responseWrapper;
     }

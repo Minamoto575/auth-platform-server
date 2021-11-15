@@ -33,8 +33,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("phone", phone);
         User user = userMapper.selectOne(queryWrapper);
-        System.out.println(user);
-        log.info(user.toString());
         String hashedPwd = hashPassword(password, user.getSalt());
         return hashedPwd.equals(user.getPassword());
     }
@@ -110,5 +108,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPassword(hashedPwd);
         user.setGmtModifed(System.currentTimeMillis());
         userMapper.updateById(user);
+    }
+
+    @Override
+    public void changePhone(String id, String phone) {
+        User user = userMapper.selectById(id);
+        user.setPhone(phone);
+        user.setGmtModifed(System.currentTimeMillis());
     }
 }

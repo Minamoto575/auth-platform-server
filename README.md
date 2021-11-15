@@ -1,5 +1,8 @@
 # 统一认证 后端
 
+## 测试服务器部署状态
+[![构建状态](https://serverless-913872915.coding.net/badges/sso-center/job/901105/build.svg)](https://serverless-913872915.coding.net/p/sso-center/ci/job)
+
 ## 连接配置
 
 ### 先行连接 SSH，并建立隧道

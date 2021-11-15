@@ -11,14 +11,10 @@ ADD target/auth-platform-server.jar /auth-platform-server.jar
 
 #bash方式执行，使jar可访问
 #RUN新建立一层，在其上执行这些命令，执行结束后， commit 这一层的修改，构成新的镜像。
-RUN bash -c "touch /auth-platform-server.war"
+RUN bash -c "touch /auth-platform-server.jar"
 
 #声明运行时容器提供服务端口，这只是一个声明，在运行时并不会因为这个声明应用就会开启这个端口的服务
 EXPOSE 9001
 
-# 环境变量
-ENV mysqlPassword=""
-ENV redisPassword=""
-
 #指定容器启动程序及参数   <ENTRYPOINT> "<CMD>"
-ENTRYPOINT ["java","-jar","auth-platform-server.jar --spring.datasource.druid.password=$mysqlPassword --spring.redis.password=$redisPassword"]
+ENTRYPOINT ["java","-jar","auth-platform-server.jar"]

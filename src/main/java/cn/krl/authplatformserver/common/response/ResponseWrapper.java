@@ -65,6 +65,13 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.PARAMS_ERROR.getMsg());
         return responseWrapper;
     }
+    /** 参数为空或者参数格式错误 */
+    public static ResponseWrapper markNOTLOGINError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.NOTLOGIN_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.NOTLOGIN_ERROR.getMsg());
+        return responseWrapper;
+    }
 
     /** 查询失败 */
     public static ResponseWrapper markError() {

@@ -16,7 +16,7 @@ public enum ResponseCode {
     /** 400 ~ 599 判定为前端可自定义异常处理的普通异常 */
     FAILED(400, "操作失败"),
     ACCOUNT_ERROR(401, "账户或密码错误"),
-    ADMIN_ACCOUNT_ERROR(402, "超级管理员必须使用超级狗登录"),
+    NOTLOGIN_ERROR(402, "用户未登录"),
     PARAMS_ERROR(403, "请求参数为空或格式错误"),
     API_NOT_EXISTS(404, "请求的接口不存在"),
     URL_ERROR(405, "无效的URL链接"),

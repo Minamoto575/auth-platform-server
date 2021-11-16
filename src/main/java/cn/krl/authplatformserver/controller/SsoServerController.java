@@ -38,14 +38,14 @@ public class SsoServerController {
     @Autowired
     private void configSso(SaTokenConfig cfg) {
         // 配置：未登录时返回的View
-        cfg.sso.setNotLoginView(
-            () -> {
-                String msg =
-                    "当前会话在SSO-Server端尚未登录，请先访问"
-                        + "<a href='/sso/doLogin?phone=17388888888&pwd=123456' target='_blank'> doLogin登录</a > "
-                        + "进行登录之后，刷新页面开始授权";
-                return msg;
-            });
+        // cfg.sso.setNotLoginView(
+        //     () -> {
+        //         String msg =
+        //             "当前会话在SSO-Server端尚未登录，请先访问"
+        //                 + "<a href='/sso/doLogin?phone=17388888888&pwd=123456' target='_blank'> doLogin登录</a > "
+        //                 + "进行登录之后，刷新页面开始授权";
+        //         return msg;
+        //     });
 
         // 配置：登录处理函数
         cfg.sso.setDoLoginHandle(

@@ -9,6 +9,7 @@ public enum ResponseCode {
 
     /** 200 ~ 399 判定为正常、合法的操作 */
     SUCCESS(200, "操作成功"),
+    USER_ISLOGIN(200, "用户已登录"),
     NODATA(201, "操作成功，但无记录"),
     DATA_EXISTED(202, "操作成功，但记录已存在"),
     REDIRECT(302, "重定向"),

@@ -57,6 +57,13 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.DATA_EXISTED.getMsg());
         return responseWrapper;
     }
+    /** 操作成功，但记录已存在 */
+    public static ResponseWrapper markUserIsLogin() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.USER_ISLOGIN.getCode());
+        responseWrapper.setMsg(ResponseCode.USER_ISLOGIN.getMsg());
+        return responseWrapper;
+    }
 
     /** 参数为空或者参数格式错误 */
     public static ResponseWrapper markParamError() {

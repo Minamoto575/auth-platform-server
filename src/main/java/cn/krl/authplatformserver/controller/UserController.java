@@ -1,9 +1,15 @@
 package cn.krl.authplatformserver.controller;
 
+import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.sso.SaSsoHandle;
+import cn.dev33.satoken.sso.SaSsoUtil;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaResult;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
+import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +32,67 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private IUserService userService;
+
+    // /**
+    //  * @description 判断用户是否已经登录
+    //  * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+    //  * @data 2021/11/16
+    //  */
+    // @GetMapping("/isLogin")
+    // @ApiOperation("用户登录状态查询")
+    // @ResponseBody
+    // public ResponseWrapper isLogin() {
+    //     if(StpUtil.isLogin()){
+    //         log.info("用户登录状态查询：用户已成功登录");
+    //         return ResponseWrapper.markUserIsLogin();
+    //     }else{
+    //         log.info("用户登录状态查询：用户未登录");
+    //         return ResponseWrapper.markNOTLOGINError();
+    //     }
+    // }
+    //
+    // /**
+    //  * @description 用户登录
+    //  * @param phone:  电话
+    //  * @param pwd:  密码
+    //  * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+    //  * @data 2021/11/16
+    //  */
+    // @GetMapping("/login")
+    // @ApiOperation("用户登录")
+    // @ResponseBody
+    // public ResponseWrapper login(@RequestParam String phone, @RequestParam String pwd) {
+    //     ResponseWrapper responseWrapper;
+    //     if(!userService.phoneExists(phone)){
+    //         log.info(phone + "该账号未注册");
+    //         return ResponseWrapper.markAccountError();
+    //     }
+    //     if (userService.loginCheck(phone, pwd)) {
+    //         User user = userService.getUserByPhone(phone);
+    //         StpUtil.login(user.getId());
+    //         responseWrapper = ResponseWrapper.markSuccess();
+    //         responseWrapper.setExtra("token", StpUtil.getTokenValue());
+    //         log.info(phone + "登录成功");
+    //         return responseWrapper;
+    //     }
+    //     log.info(phone + "登录失败，电话号码或者密码错误");
+    //     return ResponseWrapper.markAccountError();
+    // }
+    //
+    // /**
+    //  * @description 用户退出
+    //  * @param id 用户id
+    //  * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+    //  * @data 2021/11/16
+    //  */
+    // @GetMapping("/logout")
+    // @ApiOperation("用户退出")
+    // @ResponseBody
+    // public ResponseWrapper logout(@RequestParam String id) {
+    //     StpUtil.logout(id);
+    //     return ResponseWrapper.markSuccess();
+    // }
+
 
     /**
      * @param registerDTO: 用户注册提交的表单 数据的要求详情见RegisterDTO

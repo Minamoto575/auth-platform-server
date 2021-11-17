@@ -7,9 +7,11 @@ package cn.krl.authplatformserver.controller;
  */
 import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.spring.SpringMVCUtil;
 import cn.dev33.satoken.sso.SaSsoConsts;
 import cn.dev33.satoken.sso.SaSsoHandle;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.util.SaFoxUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
@@ -41,12 +43,14 @@ public class SsoServerController {
     @Autowired
     private void configSso(SaTokenConfig cfg) {
 
-        // SaSsoConsts.Api.ssoAuth = "/";
         // 配置：未登录时进行提示
         cfg.sso.setNotLoginView(
             () -> {
                 log.info("用户未登录！");
-                return ResponseWrapper.markNOTLOGINError();
+                String redirect = SaHolder.getRequest().getParam("redirect");
+                // String back = SaFoxUtil.joinParam(SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString());
+                SaHolder.getResponse().redirect("https://sso-center.sudocat.forestsay.cc/#/login?redirecr=" + SaFoxUtil.encodeUrl(redirect));
+                return ResponseWrapper.markRedirect();
             });
 
         // 配置：登录处理函数

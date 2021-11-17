@@ -13,6 +13,7 @@ import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -33,65 +34,68 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    // /**
-    //  * @description 判断用户是否已经登录
-    //  * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-    //  * @data 2021/11/16
-    //  */
-    // @GetMapping("/isLogin")
-    // @ApiOperation("用户登录状态查询")
-    // @ResponseBody
-    // public ResponseWrapper isLogin() {
-    //     if(StpUtil.isLogin()){
-    //         log.info("用户登录状态查询：用户已成功登录");
-    //         return ResponseWrapper.markUserIsLogin();
-    //     }else{
-    //         log.info("用户登录状态查询：用户未登录");
-    //         return ResponseWrapper.markNOTLOGINError();
-    //     }
-    // }
-    //
-    // /**
-    //  * @description 用户登录
-    //  * @param phone:  电话
-    //  * @param pwd:  密码
-    //  * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-    //  * @data 2021/11/16
-    //  */
-    // @GetMapping("/login")
-    // @ApiOperation("用户登录")
-    // @ResponseBody
-    // public ResponseWrapper login(@RequestParam String phone, @RequestParam String pwd) {
-    //     ResponseWrapper responseWrapper;
-    //     if(!userService.phoneExists(phone)){
-    //         log.info(phone + "该账号未注册");
-    //         return ResponseWrapper.markAccountError();
-    //     }
-    //     if (userService.loginCheck(phone, pwd)) {
-    //         User user = userService.getUserByPhone(phone);
-    //         StpUtil.login(user.getId());
-    //         responseWrapper = ResponseWrapper.markSuccess();
-    //         responseWrapper.setExtra("token", StpUtil.getTokenValue());
-    //         log.info(phone + "登录成功");
-    //         return responseWrapper;
-    //     }
-    //     log.info(phone + "登录失败，电话号码或者密码错误");
-    //     return ResponseWrapper.markAccountError();
-    // }
-    //
-    // /**
-    //  * @description 用户退出
-    //  * @param id 用户id
-    //  * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-    //  * @data 2021/11/16
-    //  */
-    // @GetMapping("/logout")
-    // @ApiOperation("用户退出")
-    // @ResponseBody
-    // public ResponseWrapper logout(@RequestParam String id) {
-    //     StpUtil.logout(id);
-    //     return ResponseWrapper.markSuccess();
-    // }
+    /**
+     * @description 判断用户是否已经登录
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/16
+     */
+    @GetMapping("/auth")
+    @ApiOperation("用户登录状态查询")
+    @ResponseBody
+    public ResponseWrapper isLogin(@RequestParam String redirect) {
+        ResponseWrapper responseWrapper;
+        if(StpUtil.isLogin()){
+            log.info("用户登录状态查询：用户已成功登录");
+            responseWrapper=ResponseWrapper.markRedirect();
+            responseWrapper.setExtra("redirect",redirect);
+        }else{
+            log.info("用户登录状态查询：用户未登录");
+            return ResponseWrapper.markNOTLOGINError();
+        }
+        return responseWrapper;
+    }
+
+    /**
+     * @description 用户登录
+     * @param phone:  电话
+     * @param pwd:  密码
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/16
+     */
+    @GetMapping("/login")
+    @ApiOperation("用户登录")
+    @ResponseBody
+    public ResponseWrapper login(@RequestParam String phone, @RequestParam String pwd) {
+        ResponseWrapper responseWrapper;
+        if(!userService.phoneExists(phone)){
+            log.info(phone + "该账号未注册");
+            return ResponseWrapper.markAccountError();
+        }
+        if (userService.loginCheck(phone, pwd)) {
+            User user = userService.getUserByPhone(phone);
+            StpUtil.login(user.getId());
+            responseWrapper = ResponseWrapper.markSuccess();
+            responseWrapper.setExtra("token", StpUtil.getTokenValue());
+            log.info(phone + "登录成功");
+            return responseWrapper;
+        }
+        log.info(phone + "登录失败，电话号码或者密码错误");
+        return ResponseWrapper.markAccountError();
+    }
+
+    /**
+     * @description 用户退出
+     * @param id 用户id
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/16
+     */
+    @GetMapping("/logout")
+    @ApiOperation("用户退出")
+    @ResponseBody
+    public ResponseWrapper logout(@RequestParam String id) {
+        StpUtil.logout(id);
+        return ResponseWrapper.markSuccess();
+    }
 
 
     /**

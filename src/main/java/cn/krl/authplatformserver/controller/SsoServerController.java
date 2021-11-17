@@ -16,6 +16,7 @@ import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(tags = "单点登录")
 @Slf4j
+@CrossOrigin
 public class SsoServerController {
 
     @Autowired private IUserService userService;
@@ -55,6 +57,7 @@ public class SsoServerController {
                 if (userService.loginCheck(phone, pwd)) {
                     User user = userService.getUserByPhone(phone);
                     StpUtil.login(user.getId());
+
                     responseWrapper = ResponseWrapper.markSuccess();
                     responseWrapper.setExtra("token", StpUtil.getTokenValue());
                     log.info(phone + "登录成功");
@@ -63,7 +66,6 @@ public class SsoServerController {
                 log.info(phone + "登录失败，电话号码或者密码错误");
                 return ResponseWrapper.markAccountError();
             });
-
         // http://{host}:{port}/sso/logout
         // 参数	是否必填	说明
         // loginId	否	要注销的账号id

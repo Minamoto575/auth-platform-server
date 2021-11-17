@@ -64,6 +64,13 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.USER_ISLOGIN.getMsg());
         return responseWrapper;
     }
+    /** 重定向 */
+    public static ResponseWrapper markRedirect() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.REDIRECT.getCode());
+        responseWrapper.setMsg(ResponseCode.REDIRECT.getMsg());
+        return responseWrapper;
+    }
 
     /** 参数为空或者参数格式错误 */
     public static ResponseWrapper markParamError() {

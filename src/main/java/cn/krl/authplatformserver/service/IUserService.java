@@ -1,9 +1,12 @@
 package cn.krl.authplatformserver.service;
 
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
+import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * 用户服务类
@@ -64,14 +67,14 @@ public interface IUserService extends IService<User> {
 
     /**
      * @param userUpdateDTO: 信息表单
-     * @description 更新用户信息  不做验证 开放给管理员用
+     * @description 更新用户信息 不做验证 开放给管理员用
      * @return: void
      * @data 2021/11/12
      */
     void updateUser(UserUpdateDTO userUpdateDTO);
 
     /**
-     * @param phone:  电话号码
+     * @param phone: 电话号码
      * @param newPwd: 新密码
      * @description 修改密码
      * @return: void
@@ -80,11 +83,27 @@ public interface IUserService extends IService<User> {
     void changePwd(String phone, String newPwd);
 
     /**
-     * @param id:    用户id
+     * @param id: 用户id
      * @param phone: 新的电话
      * @description 修改绑定的电话号码
      * @return: void
      * @data 2021/11/15
      */
     void changePhone(String id, String phone);
+
+    /**
+     * @description 列出所以的用户
+     * @return: java.util.List<cn.krl.authplatformserver.model.dto.UserDTO>
+     * @data 2021/11/18
+     */
+    List<UserDTO> listAll();
+
+    /**
+     * @description 分页列出用户
+     * @param cur: 当前页码
+     * @param size: 页的大小
+     * @return: java.util.List<cn.krl.authplatformserver.model.dto.UserDTO>
+     * @data 2021/11/18
+     */
+    List<UserDTO> listPage(int cur, int size);
 }

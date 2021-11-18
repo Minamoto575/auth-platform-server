@@ -1,25 +1,21 @@
 package cn.krl.authplatformserver.controller;
 
-import cn.dev33.satoken.context.SaHolder;
-import cn.dev33.satoken.sso.SaSsoHandle;
-import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaResult;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
+import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 用户前端控制器
@@ -33,8 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @CrossOrigin
 public class UserController {
-    @Autowired
-    private IUserService userService;
+    @Autowired private IUserService userService;
 
     /**
      * @description 判断用户是否已经登录
@@ -46,34 +41,47 @@ public class UserController {
     @ResponseBody
     public ResponseWrapper isLogin(@RequestParam String redirect) {
         ResponseWrapper responseWrapper;
-        if(StpUtil.isLogin()){
-            log.info("用户登录状态查询：用户已成功登录");
-            responseWrapper=ResponseWrapper.markRedirect();
-        }else{
-            log.info("用户登录状态查询：用户未登录");
-            responseWrapper= ResponseWrapper.markNOTLOGINError();
+        if (!RegexUtil.isLegalUrl(redirect)) {
+            log.error("无效的URL格式");
+            return ResponseWrapper.markUrlError();
         }
-        responseWrapper.setExtra("redirect",redirect);
+        if (StpUtil.isLogin()) {
+            log.info("用户登录状态查询：用户已成功登录");
+            responseWrapper = ResponseWrapper.markRedirect();
+        } else {
+            log.info("用户登录状态查询：用户未登录");
+            responseWrapper = ResponseWrapper.markNOTLOGINError();
+        }
+        responseWrapper.setExtra("redirect", redirect);
         return responseWrapper;
     }
 
     /**
+     * @param phone: 电话
+     * @param pwd: 密码
      * @description 用户登录
-     * @param phone:  电话
-     * @param pwd:  密码
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @data 2021/11/16
      */
     @GetMapping("/login")
     @ApiOperation("用户登录")
     @ResponseBody
-    public ResponseWrapper login(@RequestParam String phone, @RequestParam String pwd,
-                                 @RequestParam(required = false) String redirect) {
+    public ResponseWrapper login(
+            @RequestParam String phone,
+            @RequestParam String pwd,
+            @RequestParam(required = false) String redirect) {
         ResponseWrapper responseWrapper;
-        if(!userService.phoneExists(phone)){
+        if (!RegexUtil.isBlank(redirect)) {
+            if (!RegexUtil.isLegalUrl(redirect)) {
+                log.error("无效的URL格式");
+                return ResponseWrapper.markUrlError();
+            }
+        }
+        if (!userService.phoneExists(phone)) {
             log.info(phone + "该账号未注册");
             return ResponseWrapper.markAccountError();
         }
+
         if (userService.loginCheck(phone, pwd)) {
             User user = userService.getUserByPhone(phone);
             StpUtil.login(user.getId());
@@ -81,9 +89,12 @@ public class UserController {
             responseWrapper.setExtra("token", StpUtil.getTokenValue());
             log.info(phone + "登录成功");
             return responseWrapper;
+        } else {
+            log.info(phone + "登录失败，电话号码或者密码错误");
+            responseWrapper = ResponseWrapper.markAccountError();
         }
-        log.info(phone + "登录失败，电话号码或者密码错误");
-        return ResponseWrapper.markAccountError();
+        responseWrapper.setExtra("redirect", redirect);
+        return responseWrapper;
     }
 
     /**
@@ -99,7 +110,6 @@ public class UserController {
         StpUtil.logout(id);
         return ResponseWrapper.markSuccess();
     }
-
 
     /**
      * @param registerDTO: 用户注册提交的表单 数据的要求详情见RegisterDTO
@@ -165,7 +175,7 @@ public class UserController {
     }
 
     /**
-     * @param phone:  电话号码 当作用户的账号
+     * @param phone: 电话号码 当作用户的账号
      * @param oldPwd: 验证旧密码
      * @param newPwd: 新密码
      * @description 用户更改密码的方法
@@ -175,8 +185,8 @@ public class UserController {
     @PutMapping("/changePwd")
     @ApiOperation("用户更改密码")
     @ResponseBody
-    public ResponseWrapper changePwd(@RequestParam String phone, @RequestParam String oldPwd,
-                                     @RequestParam String newPwd) {
+    public ResponseWrapper changePwd(
+            @RequestParam String phone, @RequestParam String oldPwd, @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
         if (!userService.loginCheck(phone, oldPwd)) {
             log.warn(phone + "旧密码验证失败");
@@ -211,12 +221,12 @@ public class UserController {
     @DeleteMapping("/delete/id")
     @ApiOperation("删除用户")
     @ResponseBody
-    public ResponseWrapper deleteById(@RequestParam String id){
-        if(userService.removeById(id)){
-            log.info("删除用户成功，用户id:"+id);
+    public ResponseWrapper deleteById(@RequestParam String id) {
+        if (userService.removeById(id)) {
+            log.info("删除用户成功，用户id:" + id);
             return ResponseWrapper.markSuccess();
-        }else{
-            log.info("删除用户失败，用户id:"+id);
+        } else {
+            log.info("删除用户失败，用户id:" + id);
             return ResponseWrapper.markError();
         }
     }
@@ -224,11 +234,36 @@ public class UserController {
     @GetMapping("/list/all")
     @ApiOperation("获取用户列表")
     @ResponseBody
-    public ResponseWrapper listAll(){
+    public ResponseWrapper listAll() {
         ResponseWrapper responseWrapper;
-        responseWrapper=ResponseWrapper.markSuccess();
+        try {
+            List<UserDTO> users = userService.listAll();
+            responseWrapper = ResponseWrapper.markSuccess();
+            responseWrapper.setExtra("users", users);
+            log.info("查询所有用户成功");
+        } catch (Exception e) {
+            log.error("查询所有用户失败");
+            responseWrapper = ResponseWrapper.markError();
+            e.printStackTrace();
+        }
         return responseWrapper;
     }
 
-
+    @GetMapping("/list/page")
+    @ApiOperation("分页获取用户")
+    @ResponseBody
+    public ResponseWrapper listPage(int cur, int size) {
+        ResponseWrapper responseWrapper;
+        try {
+            List<UserDTO> users = userService.listPage(cur, size);
+            responseWrapper = ResponseWrapper.markSuccess();
+            responseWrapper.setExtra("users", users);
+            log.info("分页查询所有用户成功");
+        } catch (Exception e) {
+            log.error("分页查询所有用户失败");
+            responseWrapper = ResponseWrapper.markError();
+            e.printStackTrace();
+        }
+        return responseWrapper;
+    }
 }

@@ -3,10 +3,12 @@ package cn.krl.authplatformserver.service.Impl;
 import cn.krl.authplatformserver.common.utils.SaltUtil;
 import cn.krl.authplatformserver.mapper.UserMapper;
 import cn.krl.authplatformserver.model.dto.RegisterDTO;
+import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -115,5 +118,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = userMapper.selectById(id);
         user.setPhone(phone);
         user.setGmtModifed(System.currentTimeMillis());
+    }
+
+    @Override
+    public List<UserDTO> listAll() {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        List<User> users = userMapper.selectList(queryWrapper);
+        return users2UserDTOs(users);
+    }
+
+    @Override
+    public List<UserDTO> listPage(int cur, int size) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        Page page = new Page();
+        page.setCurrent(cur);
+        page.setSize(size);
+        List<User> users = userMapper.selectPage(page, queryWrapper).getRecords();
+        return users2UserDTOs(users);
+    }
+
+    public List<UserDTO> users2UserDTOs(List<User> users) {
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user : users) {
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+            userDTOS.add(userDTO);
+        }
+        return userDTOS;
     }
 }

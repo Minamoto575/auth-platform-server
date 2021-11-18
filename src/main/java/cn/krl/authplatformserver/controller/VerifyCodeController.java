@@ -21,17 +21,15 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author kuang
  * @description 验证码控制器
- * @date 2021/11/12  16:59
+ * @date 2021/11/12 16:59
  */
 @RestController
-@RequestMapping("/verify")
+@RequestMapping("/api/verify")
 @Api(tags = "验证码的api")
 @Slf4j
 public class VerifyCodeController {
-    @Autowired
-    private IVerifyCodeService verifyCodeService;
-    @Autowired
-    private IUserService userService;
+    @Autowired private IVerifyCodeService verifyCodeService;
+    @Autowired private IUserService userService;
 
     /**
      * @param request:
@@ -45,26 +43,25 @@ public class VerifyCodeController {
     public void verifyCode(HttpServletRequest request, HttpServletResponse response) {
         ResponseWrapper responseWrapper;
         try {
-            //设置长宽
+            // 设置长宽
             VerifyCode verifyCode = verifyCodeService.generate(80, 28);
             String code = verifyCode.getCode();
             log.info("生成登录验证码：" + code);
-            //将VerifyCode绑定session
+            // 将VerifyCode绑定session
             request.getSession().setAttribute("VerifyCode", code);
-            //设置响应头
+            // 设置响应头
             response.setHeader("Pragma", "no-cache");
-            //设置响应头
+            // 设置响应头
             response.setHeader("Cache-Control", "no-cache");
-            //在代理服务器端防止缓冲
+            // 在代理服务器端防止缓冲
             response.setDateHeader("Expires", System.currentTimeMillis() + 3600000);
-            //设置响应内容类型
+            // 设置响应内容类型
             response.setContentType("image/jpeg");
             response.getOutputStream().write(verifyCode.getImgBytes());
             response.getOutputStream().flush();
         } catch (Exception e) {
             log.info("获取登录验证码失败：" + e.getMessage());
         }
-
     }
 
     /**

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SsoServerController {
 
     @Autowired private IUserService userService;
+    private final String REDIRETCT_URL ="https://sso-center.sudocat.forestsay.cc/#/login?redirecr=";
 
     /*
      * SSO-Server端：处理所有SSO相关请求
@@ -49,7 +50,7 @@ public class SsoServerController {
                 log.info("用户未登录！");
                 String redirect = SaHolder.getRequest().getParam("redirect");
                 // String back = SaFoxUtil.joinParam(SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString());
-                SaHolder.getResponse().redirect("https://sso-center.sudocat.forestsay.cc/#/login?redirecr=" + SaFoxUtil.encodeUrl(redirect));
+                SaHolder.getResponse().redirect(REDIRETCT_URL + SaFoxUtil.encodeUrl(redirect));
                 return ResponseWrapper.markRedirect();
             });
 

@@ -49,8 +49,14 @@ public class SsoServerController {
             () -> {
                 log.info("用户未登录！");
                 String redirect = SaHolder.getRequest().getParam("redirect");
+
                 // String back = SaFoxUtil.joinParam(SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString());
+                SaHolder.getResponse().setHeader("Access-Control-Allow-Origin", "*");
+                SaHolder.getResponse().setHeader("Access-Control-Allow-Credentials", "true");
+                SaHolder.getResponse().setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
+                SaHolder.getResponse().setHeader("Access-Control-Allow-Headers", SaHolder.getRequest().getHeader("Access-Control-Request-Headers"));
                 SaHolder.getResponse().redirect(REDIRETCT_URL + SaFoxUtil.encodeUrl(redirect));
+
                 return ResponseWrapper.markRedirect();
             });
 

@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SsoServerController {
 
     @Autowired private IUserService userService;
-    private final String REDIRETCT_URL ="https://sso-center.sudocat.forestsay.cc/#/login?redirecr=";
+    private final String REDIRETCT_URL ="https://sso-center.sudocat.forestsay.cc/#/login?redirect=";
 
     /*
      * SSO-Server端：处理所有SSO相关请求
@@ -45,44 +45,32 @@ public class SsoServerController {
     private void configSso(SaTokenConfig cfg) {
 
         // 配置：未登录时进行提示
-        cfg.sso.setNotLoginView(
-            () -> {
-                log.info("用户未登录！");
-                String redirect = SaHolder.getRequest().getParam("redirect");
-
-                // String back = SaFoxUtil.joinParam(SaHolder.getRequest().getUrl(), SpringMVCUtil.getRequest().getQueryString());
-                SaHolder.getResponse().setHeader("Access-Control-Allow-Origin", "*");
-                SaHolder.getResponse().setHeader("Access-Control-Allow-Credentials", "true");
-                SaHolder.getResponse().setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
-                SaHolder.getResponse().setHeader("Access-Control-Allow-Headers", SaHolder.getRequest().getHeader("Access-Control-Request-Headers"));
-                SaHolder.getResponse().redirect(REDIRETCT_URL + SaFoxUtil.encodeUrl(redirect));
-
-                return ResponseWrapper.markRedirect();
-            });
-
-        // 配置：登录处理函数
-        cfg.sso.setDoLoginHandle(
-            (name, pwd) -> {
-                ResponseWrapper responseWrapper;
-                String phone = SaHolder.getRequest().getParam("phone");
-                if (userService.loginCheck(phone, pwd)) {
-                    User user = userService.getUserByPhone(phone);
-                    StpUtil.login(user.getId());
-
-                    responseWrapper = ResponseWrapper.markSuccess();
-                    responseWrapper.setExtra("token", StpUtil.getTokenValue());
-                    log.info(phone + "登录成功");
-                    String redirect = SaHolder.getRequest().getParam("redirect");
-                    SaHolder.getResponse().setHeader("Access-Control-Allow-Origin", "*");
-                    SaHolder.getResponse().setHeader("Access-Control-Allow-Credentials", "true");
-                    SaHolder.getResponse().setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
-                    SaHolder.getResponse().setHeader("Access-Control-Allow-Headers", SaHolder.getRequest().getHeader("Access-Control-Request-Headers"));
-                    SaHolder.getResponse().redirect(REDIRETCT_URL + SaFoxUtil.encodeUrl(redirect));
-                    return responseWrapper;
-                }
-                log.info(phone + "登录失败，电话号码或者密码错误");
-                return ResponseWrapper.markAccountError();
-            });
+        // cfg.sso.setNotLoginView(
+        //     () -> {
+        //         ResponseWrapper responseWrapper = ResponseWrapper.markRedirect();
+        //         log.info("用户未登录！");
+        //         String redirect = SaHolder.getRequest().getParam("redirect");
+        //         responseWrapper.setExtra("url",REDIRETCT_URL+redirect);
+        //         return ResponseWrapper.markRedirect();
+        //     });
+        //
+        // // 配置：登录处理函数
+        // cfg.sso.setDoLoginHandle(
+        //     (name, pwd) -> {
+        //         ResponseWrapper responseWrapper;
+        //         String phone = SaHolder.getRequest().getParam("phone");
+        //         if (userService.loginCheck(phone, pwd)) {
+        //             User user = userService.getUserByPhone(phone);
+        //             StpUtil.login(user.getId());
+        //
+        //             responseWrapper = ResponseWrapper.markSuccess();
+        //             responseWrapper.setExtra("token", StpUtil.getTokenValue());
+        //             log.info(phone + "登录成功");
+        //             return responseWrapper;
+        //         }
+        //         log.info(phone + "登录失败，电话号码或者密码错误");
+        //         return ResponseWrapper.markAccountError();
+        //     });
         // http://{host}:{port}/sso/logout
         // 参数	是否必填	说明
         // loginId	否	要注销的账号id

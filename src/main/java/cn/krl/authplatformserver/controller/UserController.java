@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,11 +49,11 @@ public class UserController {
         if(StpUtil.isLogin()){
             log.info("用户登录状态查询：用户已成功登录");
             responseWrapper=ResponseWrapper.markRedirect();
-            responseWrapper.setExtra("redirect",redirect);
         }else{
             log.info("用户登录状态查询：用户未登录");
-            return ResponseWrapper.markNOTLOGINError();
+            responseWrapper= ResponseWrapper.markNOTLOGINError();
         }
+        responseWrapper.setExtra("redirect",redirect);
         return responseWrapper;
     }
 
@@ -66,7 +67,8 @@ public class UserController {
     @GetMapping("/login")
     @ApiOperation("用户登录")
     @ResponseBody
-    public ResponseWrapper login(@RequestParam String phone, @RequestParam String pwd) {
+    public ResponseWrapper login(@RequestParam String phone, @RequestParam String pwd,
+                                 @RequestParam(required = false) String redirect) {
         ResponseWrapper responseWrapper;
         if(!userService.phoneExists(phone)){
             log.info(phone + "该账号未注册");
@@ -224,7 +226,7 @@ public class UserController {
     @ResponseBody
     public ResponseWrapper listAll(){
         ResponseWrapper responseWrapper;
-
+        responseWrapper=ResponseWrapper.markSuccess();
         return responseWrapper;
     }
 

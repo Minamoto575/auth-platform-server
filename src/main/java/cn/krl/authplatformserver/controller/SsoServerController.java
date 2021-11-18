@@ -72,6 +72,12 @@ public class SsoServerController {
                     responseWrapper = ResponseWrapper.markSuccess();
                     responseWrapper.setExtra("token", StpUtil.getTokenValue());
                     log.info(phone + "登录成功");
+                    String redirect = SaHolder.getRequest().getParam("redirect");
+                    SaHolder.getResponse().setHeader("Access-Control-Allow-Origin", "*");
+                    SaHolder.getResponse().setHeader("Access-Control-Allow-Credentials", "true");
+                    SaHolder.getResponse().setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE,PUT");
+                    SaHolder.getResponse().setHeader("Access-Control-Allow-Headers", SaHolder.getRequest().getHeader("Access-Control-Request-Headers"));
+                    SaHolder.getResponse().redirect(REDIRETCT_URL + SaFoxUtil.encodeUrl(redirect));
                     return responseWrapper;
                 }
                 log.info(phone + "登录失败，电话号码或者密码错误");

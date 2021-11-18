@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -202,6 +203,28 @@ public class UserController {
             log.error("用户id：" + id + "修改新的电话：" + phone + "失败");
             responseWrapper = ResponseWrapper.markChangePhoneError();
         }
+        return responseWrapper;
+    }
+
+    @DeleteMapping("/delete/id")
+    @ApiOperation("删除用户")
+    @ResponseBody
+    public ResponseWrapper deleteById(@RequestParam String id){
+        if(userService.removeById(id)){
+            log.info("删除用户成功，用户id:"+id);
+            return ResponseWrapper.markSuccess();
+        }else{
+            log.info("删除用户失败，用户id:"+id);
+            return ResponseWrapper.markError();
+        }
+    }
+
+    @GetMapping("/list/all")
+    @ApiOperation("获取用户列表")
+    @ResponseBody
+    public ResponseWrapper listAll(){
+        ResponseWrapper responseWrapper;
+
         return responseWrapper;
     }
 

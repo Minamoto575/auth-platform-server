@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2021-11-11
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @Api(tags = "用户的api")
 @Slf4j
 @CrossOrigin

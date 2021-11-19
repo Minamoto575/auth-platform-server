@@ -64,6 +64,20 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.USER_ISLOGIN.getMsg());
         return responseWrapper;
     }
+    /** 图形验证码检查成功 但是不一致 */
+    public static ResponseWrapper markImageCodeNotConsistent() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.IMAGECODE_NOT_CONSISTENT.getCode());
+        responseWrapper.setMsg(ResponseCode.IMAGECODE_NOT_CONSISTENT.getMsg());
+        return responseWrapper;
+    }
+    /** 短信验证码检查成功 但是不一致 */
+    public static ResponseWrapper markMessageCodeNotConsistent() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.MESSAGECODE_NOT_CONSISTENT.getCode());
+        responseWrapper.setMsg(ResponseCode.MESSAGECODE_NOT_CONSISTENT.getMsg());
+        return responseWrapper;
+    }
     /** 重定向 */
     public static ResponseWrapper markRedirect() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
@@ -139,9 +153,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 邮箱已被使用
-     */
+    /** 邮箱已被使用 */
     public static ResponseWrapper markEmailExist() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.EMAIL_EXIST.getCode());
@@ -149,9 +161,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 非法的电话格式
-     */
+    /** 非法的电话格式 */
     public static ResponseWrapper markPhoneError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.PHONE_ERROR.getCode());
@@ -159,9 +169,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 非法的邮箱格式
-     */
+    /** 非法的邮箱格式 */
     public static ResponseWrapper markEmailError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.EMAIL_ERROR.getCode());
@@ -169,13 +177,47 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 验证码获取失败
-     */
-    public static ResponseWrapper markVerifyCodeError() {
+    /** 图形验证码生成失败 */
+    public static ResponseWrapper markImageCodeGenerateError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
-        responseWrapper.setCode(ResponseCode.VERIFYCODE_ERROR.getCode());
-        responseWrapper.setMsg(ResponseCode.VERIFYCODE_ERROR.getMsg());
+        responseWrapper.setCode(ResponseCode.IMAGECODE_GENERATE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.IMAGECODE_GENERATE_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /** session中未找到图形验证码 */
+    public static ResponseWrapper markImageCodeNotFound() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.IMAGECODE_NOT_FOUND.getCode());
+        responseWrapper.setMsg(ResponseCode.IMAGECODE_NOT_FOUND.getMsg());
+        return responseWrapper;
+    }
+    /** 图形验证码检查失败 */
+    public static ResponseWrapper markImageCodeCheckError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.IMAGECODE_CHECK_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.IMAGECODE_CHECK_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /** 短信验证码生成失败 */
+    public static ResponseWrapper markMessageCodeGenerateError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.MESSAGECODE_GENERATE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.MESSAGECODE_GENERATE_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /** session中未找到短信验证码 */
+    public static ResponseWrapper markMessageCodeNotFound() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.MESSAGECODE_NOT_FOUND.getCode());
+        responseWrapper.setMsg(ResponseCode.MESSAGECODE_NOT_FOUND.getMsg());
+        return responseWrapper;
+    }
+    /** 短信验证码检查失败 */
+    public static ResponseWrapper markMessageCodeCheckError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.MESSAGECODE_CHECK_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.MESSAGECODE_CHECK_ERROR.getMsg());
         return responseWrapper;
     }
 
@@ -228,18 +270,6 @@ public class ResponseWrapper {
     }
 
     /**
-     * 短信发送失败
-     *
-     * @return
-     */
-    public static ResponseWrapper markMessageError() {
-        ResponseWrapper responseWrapper = new ResponseWrapper();
-        responseWrapper.setCode(ResponseCode.MESSAGE_ERROR.getCode());
-        responseWrapper.setMsg(ResponseCode.MESSAGE_ERROR.getMsg());
-        return responseWrapper;
-    }
-
-    /**
      * 注册·失败
      *
      * @return
@@ -251,11 +281,10 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-
     /**
      * 包装ResponseWrapper
      *
-     * @param tag       Tag名称
+     * @param tag Tag名称
      * @param jsonArray JSON数据
      * @return ResponseWrapper
      */

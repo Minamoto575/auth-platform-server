@@ -12,6 +12,8 @@ public enum ResponseCode {
     USER_ISLOGIN(200, "用户已登录"),
     NODATA(201, "操作成功，但无记录"),
     DATA_EXISTED(202, "操作成功，但记录已存在"),
+    IMAGECODE_NOT_CONSISTENT(203, "图形验证码检查成功，但校验不一致"),
+    MESSAGECODE_NOT_CONSISTENT(204, "短信验证码检查成功，但校验不一致"),
     REDIRECT(302, "重定向"),
 
     /** 400 ~ 599 判定为前端可自定义异常处理的普通异常 */
@@ -27,16 +29,19 @@ public enum ResponseCode {
     EMAIL_EXIST(409, "该邮箱已被使用"),
     EMAIL_ERROR(410, "非法的邮箱格式"),
     PHONE_ERROR(411, "非法的电话格式"),
-    VERIFYCODE_ERROR(412, "验证码获取失败"),
+    IMAGECODE_GENERATE_ERROR(412, "图形验证码生成失败"),
+    IMAGECODE_NOT_FOUND(412, "session中未找到图形验证码"),
+    IMAGECODE_CHECK_ERROR(412, "图形验证码检查失败"),
     CHANGEPHONE_ERROR(413, "修改电话失败"),
     CHANGEPWD_ERROR(414, "修改密码失败"),
     UPDATEUSER_ERROR(415, "更新用户失败"),
-    MESSAGE_ERROR(416, "短信发送失败"),
+    MESSAGECODE_GENERATE_ERROR(416, "短信验证码发送失败"),
+    MESSAGECODE_NOT_FOUND(416, "session中未找到短信验证码"),
+    MESSAGECODE_CHECK_ERROR(416, "短信验证码检查失败"),
     REGISTER_ERROR(417, "注册失败"),
+
     SYSTEM_ERROR(500, "系统异常"),
-    /**
-     * 900以上，判定为前端同一处理的异常
-     */
+    /** 900以上，判定为前端同一处理的异常 */
     API_NOT_PER(900, "没有该接口的访问权限");
     private int code;
     private String msg;

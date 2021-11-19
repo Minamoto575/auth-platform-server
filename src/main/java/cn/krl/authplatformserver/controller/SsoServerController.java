@@ -7,11 +7,8 @@ package cn.krl.authplatformserver.controller;
  */
 import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.context.SaHolder;
-import cn.dev33.satoken.spring.SpringMVCUtil;
-import cn.dev33.satoken.sso.SaSsoConsts;
 import cn.dev33.satoken.sso.SaSsoHandle;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.dev33.satoken.util.SaFoxUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
@@ -29,8 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class SsoServerController {
 
+    private final String REDIRETCT_URL =
+            "https://sso-center.sudocat.forestsay.cc/#/login?redirect=";
     @Autowired private IUserService userService;
-    private final String REDIRETCT_URL ="https://sso-center.sudocat.forestsay.cc/#/login?redirect=";
 
     /*
      * SSO-Server端：处理所有SSO相关请求
@@ -55,28 +53,27 @@ public class SsoServerController {
         //     });
         //
         // // 配置：登录处理函数
-        // cfg.sso.setDoLoginHandle(
-        //     (name, pwd) -> {
-        //         ResponseWrapper responseWrapper;
-        //         String phone = SaHolder.getRequest().getParam("phone");
-        //         if (userService.loginCheck(phone, pwd)) {
-        //             User user = userService.getUserByPhone(phone);
-        //             StpUtil.login(user.getId());
-        //
-        //             responseWrapper = ResponseWrapper.markSuccess();
-        //             responseWrapper.setExtra("token", StpUtil.getTokenValue());
-        //             log.info(phone + "登录成功");
-        //             return responseWrapper;
-        //         }
-        //         log.info(phone + "登录失败，电话号码或者密码错误");
-        //         return ResponseWrapper.markAccountError();
-        //     });
+        cfg.sso.setDoLoginHandle(
+                (name, pwd) -> {
+                    ResponseWrapper responseWrapper;
+                    String phone = SaHolder.getRequest().getParam("phone");
+                    if (userService.loginCheck(phone, pwd)) {
+                        User user = userService.getUserByPhone(phone);
+                        StpUtil.login(user.getId());
+
+                        responseWrapper = ResponseWrapper.markSuccess();
+                        responseWrapper.setExtra("token", StpUtil.getTokenValue());
+                        log.info(phone + "登录成功");
+                        return responseWrapper;
+                    }
+                    log.info(phone + "登录失败，电话号码或者密码错误");
+                    return ResponseWrapper.markAccountError();
+                });
         // http://{host}:{port}/sso/logout
         // 参数	是否必填	说明
         // loginId	否	要注销的账号id
         // secretkey	否	接口通信秘钥
         // back	否	注销成功后的重定向地址
-
 
         // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）
         // cfg.sso.setSendHttp(
@@ -84,5 +81,4 @@ public class SsoServerController {
         //             return OkHttps.sync(url).get().getBody().toString();
         //         });
     }
-
 }

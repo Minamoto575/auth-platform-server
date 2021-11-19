@@ -1,5 +1,6 @@
 package cn.krl.authplatformserver.controller;
 
+import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
@@ -87,6 +88,10 @@ public class UserController {
             StpUtil.login(user.getId());
             responseWrapper = ResponseWrapper.markSuccess();
             responseWrapper.setExtra("token", StpUtil.getTokenValue());
+            String ticket = SaSsoUtil.createTicket(user.getId());
+            responseWrapper.setExtra("ticket", ticket);
+            responseWrapper.setExtra("phone", phone);
+            responseWrapper.setExtra("uid", user.getId());
             log.info(phone + "登录成功");
             return responseWrapper;
         } else {
@@ -106,8 +111,12 @@ public class UserController {
     @GetMapping("/logout")
     @ApiOperation("用户退出")
     @ResponseBody
-    public ResponseWrapper logout(@RequestParam String id) {
-        StpUtil.logout(id);
+    public ResponseWrapper logout(@RequestParam(required = false) String id) {
+        if (RegexUtil.isBlank(id)) {
+            StpUtil.logout(id);
+        } else {
+            StpUtil.logout();
+        }
         return ResponseWrapper.markSuccess();
     }
 

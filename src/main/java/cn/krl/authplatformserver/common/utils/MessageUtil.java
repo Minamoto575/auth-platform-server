@@ -2,7 +2,7 @@ package cn.krl.authplatformserver.common.utils;
 
 /**
  * @author kuang
- * @description 注册验证码短信发生工具类
+ * @description 注册验证码短信发生工具类  网建平台
  * @date 2021/11/14  12:51
  */
 

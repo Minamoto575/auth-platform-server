@@ -1,7 +1,7 @@
 package cn.krl.authplatformserver.controller;
 
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
-import cn.krl.authplatformserver.common.utils.MessageUtil;
+import cn.krl.authplatformserver.common.utils.AliMessageUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.pojo.VerifyCode;
 import cn.krl.authplatformserver.service.IUserService;
@@ -29,8 +29,10 @@ import javax.servlet.http.HttpSession;
 @Api(tags = "验证码的api")
 @Slf4j
 public class VerifyCodeController {
-    @Autowired private IVerifyCodeService verifyCodeService;
-    @Autowired private IUserService userService;
+    @Autowired
+    private IVerifyCodeService verifyCodeService;
+    @Autowired
+    private IUserService userService;
 
     /**
      * @param request:
@@ -64,9 +66,9 @@ public class VerifyCodeController {
     }
 
     /**
-     * @description 校验输入的图形验证码是否正确
-     * @param input: 输入的四位图形验证码
+     * @param input:   输入的四位图形验证码
      * @param session: 会话
+     * @description 校验输入的图形验证码是否正确
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @data 2021/11/19
      */
@@ -97,6 +99,40 @@ public class VerifyCodeController {
     /**
      * @param phone: 电话
      * @param request:
+     * @description 获取短信验证码 注册时使用（用到网建SMS，暂时注释）
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @data 2021/11/14
+     */
+    // @ApiOperation(value = "手机短信，用于注册")
+    // @GetMapping("/messageCode/get")
+    // public ResponseWrapper sendMessageCode(@RequestParam String phone, HttpServletRequest request) {
+    //     ResponseWrapper responseWrapper;
+    //     if (!RegexUtil.isLegalPhone(phone)) {
+    //         log.error(phone + "错误的电话格式");
+    //         return ResponseWrapper.markPhoneError();
+    //     }
+    //     if (userService.phoneExists(phone)) {
+    //         log.error(phone + "已被注册");
+    //         return ResponseWrapper.markPhoneExist();
+    //     }
+    //     String messageCode = MessageUtil.getRandomCode(6);
+    //     int resultCode = MessageUtil.send(phone, "验证码：" + messageCode + "。您正在注册，请勿告知他人此验证码。");
+    //     String message = MessageUtil.getMessage(resultCode);
+    //     if (resultCode >= 0) {
+    //         log.info("短信发送成功," + message);
+    //         responseWrapper = ResponseWrapper.markSuccess();
+    //         request.getSession().setAttribute("MessageVerifyCode", messageCode);
+    //     } else {
+    //         log.info("短信发送失败," + message);
+    //         responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
+    //     }
+    //     return responseWrapper;
+    // }
+
+
+    /**
+     * @param phone:   电话
+     * @param request:
      * @description 获取短信验证码 注册时使用
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @data 2021/11/14
@@ -113,23 +149,28 @@ public class VerifyCodeController {
             log.error(phone + "已被注册");
             return ResponseWrapper.markPhoneExist();
         }
-        String messageCode = MessageUtil.getRandomCode(6);
-        int resultCode = MessageUtil.send(phone, "验证码：" + messageCode + "。您正在注册，请勿告知他人此验证码。");
-        String message = MessageUtil.getMessage(resultCode);
-        if (resultCode >= 0) {
-            log.info("短信发送成功," + message);
-            responseWrapper = ResponseWrapper.markSuccess();
-            request.getSession().setAttribute("MessageVerifyCode", messageCode);
-        } else {
-            log.info("短信发送失败," + message);
+        String messageCode = AliMessageUtil.getRandomCode(6);
+        try {
+            if (AliMessageUtil.sendMessage(phone, messageCode)) {
+                log.info(phone + "短信发送成功" + messageCode);
+                responseWrapper = ResponseWrapper.markSuccess();
+                request.getSession().setAttribute("MessageVerifyCode", messageCode);
+            } else {
+                log.error(phone + "短信发送失败" + messageCode);
+                responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
+            }
+        } catch (Exception e) {
+            log.error(phone + "短信发送失败" + messageCode);
+            e.printStackTrace();
             responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
         }
         return responseWrapper;
     }
+
     /**
-     * @description 校验输入的短信验证码是否正确
-     * @param input: 输入的六位短信验证码
+     * @param input:   输入的六位短信验证码
      * @param session: 会话
+     * @description 校验输入的短信验证码是否正确
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @data 2021/11/19
      */

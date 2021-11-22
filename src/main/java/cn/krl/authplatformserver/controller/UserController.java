@@ -164,7 +164,7 @@ public class UserController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/14
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     @ApiOperation("用户更新")
     @ResponseBody
     public ResponseWrapper updateUser(@RequestBody @Validated UserUpdateDTO updateDTO) {

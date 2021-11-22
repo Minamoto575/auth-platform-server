@@ -11,12 +11,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 
+/**
+ * @description: 图片工具类
+ * @author: kuang
+ * @date: 2021/11/22
+ */
 @Component
 public class ImageUtil {
 
     @Value("${aliyun.endpoint}")
     private String endpoint;
 
+    /** @description: 与AliMessageUtil中的accessKeyId Secret可以使用同一款 */
     @Value("${aliyun.accessKeyId}")
     private String accessKeyId;
 
@@ -29,6 +35,13 @@ public class ImageUtil {
     @Value("${aliyun.facebodyEndpoint}")
     private String facebodyEndpoint;
 
+    /**
+     * @description: 上传图片的工具方法
+     * @param: inputStream 输入流
+     * @param: fileName 图片名称
+     * @author kuang
+     * @date: 2021/11/22
+     */
     public String uploadImage(InputStream inputStream, String fileName) {
 
         // 创建OSSClient实例。

@@ -2,6 +2,7 @@ package cn.krl.authplatformserver.controller;
 
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
+import cn.krl.authplatformserver.model.dto.SubsystemDTO;
 import cn.krl.authplatformserver.model.dto.SubsystemRegisterDTO;
 import cn.krl.authplatformserver.model.dto.SubsystemUpdateDTO;
 import cn.krl.authplatformserver.service.ISubsystemService;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 子系统管理的前端控制器
@@ -55,7 +58,7 @@ public class SubsystemController {
      * @author kuang
      * @date: 2021/11/22
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     @ApiOperation(value = "更新一条子系统记录")
     @ResponseBody
     ResponseWrapper registerSubsystem(@RequestBody SubsystemUpdateDTO updateDTO) {
@@ -90,11 +93,81 @@ public class SubsystemController {
         return responseWrapper;
     }
 
+    /**
+     * @description: 根据id删除一条子系统记录 不对id做检查 id对应记录不存在也不抛异常
+     * @param: id 子系统记录的id
+     * @author kuang
+     * @date: 2021/11/22
+     */
     @DeleteMapping("/delete/id")
     @ApiOperation(value = "通过id删除一条子系统记录")
     @ResponseBody
     ResponseWrapper deleteSubsystemById(@RequestParam Integer id) {
         subsystemService.removeById(id);
         return ResponseWrapper.markSuccess();
+    }
+
+    /**
+     * @description: 通过id获得一条子系统记录
+     * @param: id 子系统的id
+     * @author kuang
+     * @date: 2021/11/22
+     */
+    @GetMapping("/list/id")
+    @ApiOperation(value = "通过id获得一条子系统记录")
+    @ResponseBody
+    ResponseWrapper listSubsystemById(@RequestParam Integer id) {
+        ResponseWrapper responseWrapper;
+        if (subsystemService.getById(id) == null) {
+            log.error("没找到id=" + id + "的子系统记录");
+            return ResponseWrapper.markNoData();
+        }
+        SubsystemDTO subsystemDTO = subsystemService.listById(id);
+        responseWrapper = ResponseWrapper.markSuccess();
+        responseWrapper.setExtra("subsystem", subsystemDTO);
+        return responseWrapper;
+    }
+
+    /**
+     * @description: 获得所有子系统记录 包括过期的和禁用的
+     * @author kuang
+     * @date: 2021/11/22
+     */
+    @GetMapping("/list/all")
+    @ApiOperation(value = "获得所以子系统记录（包括禁用和过期的，管理员使用）")
+    @ResponseBody
+    ResponseWrapper listAllSubsystem() {
+        ResponseWrapper responseWrapper;
+        List<SubsystemDTO> subsystemDTOs = subsystemService.listAll();
+        if (subsystemDTOs.size() == 0) {
+            log.error("数据库中不存在子系统记录");
+            responseWrapper = ResponseWrapper.markNoData();
+        } else {
+            responseWrapper = ResponseWrapper.markSuccess();
+            responseWrapper.setExtra("subsystems", subsystemDTOs);
+        }
+
+        return responseWrapper;
+    }
+
+    /**
+     * @description: 获得正在工作的子系统记录 不包括过期的和禁用的
+     * @author kuang
+     * @date: 2021/11/22
+     */
+    @GetMapping("/list/workable")
+    @ApiOperation(value = "获得正在工作的子系统记录（不包括禁用和过期的，用户使用）")
+    @ResponseBody
+    ResponseWrapper listWorkableSubsystem() {
+        ResponseWrapper responseWrapper;
+        List<SubsystemDTO> subsystemDTOs = subsystemService.listWorkable();
+        if (subsystemDTOs.size() == 0) {
+            log.error("数据库中不存在可工作的子系统记录");
+            responseWrapper = ResponseWrapper.markNoData();
+        } else {
+            responseWrapper = ResponseWrapper.markSuccess();
+            responseWrapper.setExtra("subsystems", subsystemDTOs);
+        }
+        return responseWrapper;
     }
 }

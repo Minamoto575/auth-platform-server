@@ -1,10 +1,5 @@
 package cn.krl.authplatformserver.common.config;
 
-/**
- * @description 代码模板快速生成
- * @author kuang
- * @data 2021/11/11
- */
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
@@ -12,6 +7,11 @@ import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 
+/**
+ * @description 代码模板快速生成
+ * @author kuang
+ * @date 2021/11/11
+ */
 public class CodeGenerator {
     public static void main(String[] args) {
 

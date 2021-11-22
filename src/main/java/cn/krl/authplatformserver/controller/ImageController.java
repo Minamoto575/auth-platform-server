@@ -11,15 +11,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+/**
+ * @description 图片相关的api
+ * @author kuang
+ * @date 2021/11/22
+ */
 @RestController
 @Slf4j
 @RequestMapping("/api/image")
 @CrossOrigin
-@Api(tags = "图片接口")
+@Api(tags = "图片的api")
 public class ImageController {
 
     @Autowired private ImageUtil imageUtil;
 
+    /**
+     * @description 图片上传的api
+     * @param upload: 要上传的图片
+     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @date 2021/11/22
+     */
     @PostMapping("/upload")
     @ApiOperation(value = "上传图片")
     public ResponseWrapper imageUpload(@RequestPart("file") MultipartFile upload) {

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @description 响应包装类 返回给前端
  * @author kuang
- * @data 2021/10/24
+ * @date 2021/10/24
  */
 @Data
 @ApiModel(value = "响应")

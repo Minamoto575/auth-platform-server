@@ -29,17 +29,17 @@ import javax.servlet.http.HttpSession;
 @Api(tags = "验证码的api")
 @Slf4j
 public class VerifyCodeController {
-    @Autowired
-    private IVerifyCodeService verifyCodeService;
-    @Autowired
-    private IUserService userService;
+    @Autowired private IVerifyCodeService verifyCodeService;
+    @Autowired private IUserService userService;
+    @Autowired private RegexUtil regexUtil;
+    @Autowired private AliMessageUtil messageUtil;
 
     /**
      * @param request:
      * @param response:
      * @description 获取图形验证码 登录或者注册请求发送短信用
      * @return: void
-     * @data 2021/11/14
+     * @date 2021/11/14
      */
     @ApiOperation(value = "验证码（登录或者注册请求发送短信用）")
     @GetMapping("/imageCode/get")
@@ -66,11 +66,11 @@ public class VerifyCodeController {
     }
 
     /**
-     * @param input:   输入的四位图形验证码
+     * @param input: 输入的四位图形验证码
      * @param session: 会话
      * @description 校验输入的图形验证码是否正确
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/19
+     * @date 2021/11/19
      */
     @ApiOperation(value = "验证图形验证码")
     @GetMapping("/imageCode/check")
@@ -78,7 +78,7 @@ public class VerifyCodeController {
         try {
             // 从session中获取随机数
             String imageCode = (String) session.getAttribute("ImageVerifyCode");
-            if (RegexUtil.isBlank(imageCode)) {
+            if (regexUtil.isBlank(imageCode)) {
                 log.error("session中不存在对应的图形验证码");
                 return ResponseWrapper.markImageCodeNotFound();
             }
@@ -99,49 +99,15 @@ public class VerifyCodeController {
     /**
      * @param phone: 电话
      * @param request:
-     * @description 获取短信验证码 注册时使用（用到网建SMS，暂时注释）
-     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/14
-     */
-    // @ApiOperation(value = "手机短信，用于注册")
-    // @GetMapping("/messageCode/get")
-    // public ResponseWrapper sendMessageCode(@RequestParam String phone, HttpServletRequest request) {
-    //     ResponseWrapper responseWrapper;
-    //     if (!RegexUtil.isLegalPhone(phone)) {
-    //         log.error(phone + "错误的电话格式");
-    //         return ResponseWrapper.markPhoneError();
-    //     }
-    //     if (userService.phoneExists(phone)) {
-    //         log.error(phone + "已被注册");
-    //         return ResponseWrapper.markPhoneExist();
-    //     }
-    //     String messageCode = MessageUtil.getRandomCode(6);
-    //     int resultCode = MessageUtil.send(phone, "验证码：" + messageCode + "。您正在注册，请勿告知他人此验证码。");
-    //     String message = MessageUtil.getMessage(resultCode);
-    //     if (resultCode >= 0) {
-    //         log.info("短信发送成功," + message);
-    //         responseWrapper = ResponseWrapper.markSuccess();
-    //         request.getSession().setAttribute("MessageVerifyCode", messageCode);
-    //     } else {
-    //         log.info("短信发送失败," + message);
-    //         responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
-    //     }
-    //     return responseWrapper;
-    // }
-
-
-    /**
-     * @param phone:   电话
-     * @param request:
      * @description 获取短信验证码 注册时使用
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/14
+     * @date 2021/11/14
      */
     @ApiOperation(value = "手机短信，用于注册")
     @GetMapping("/messageCode/get")
     public ResponseWrapper sendMessageCode(@RequestParam String phone, HttpServletRequest request) {
         ResponseWrapper responseWrapper;
-        if (!RegexUtil.isLegalPhone(phone)) {
+        if (!regexUtil.isLegalPhone(phone)) {
             log.error(phone + "错误的电话格式");
             return ResponseWrapper.markPhoneError();
         }
@@ -149,9 +115,9 @@ public class VerifyCodeController {
             log.error(phone + "已被注册");
             return ResponseWrapper.markPhoneExist();
         }
-        String messageCode = AliMessageUtil.getRandomCode(6);
+        String messageCode = messageUtil.getRandomCode(6);
         try {
-            if (AliMessageUtil.sendMessage(phone, messageCode)) {
+            if (messageUtil.sendMessage(phone, messageCode)) {
                 log.info(phone + "短信发送成功" + messageCode);
                 responseWrapper = ResponseWrapper.markSuccess();
                 request.getSession().setAttribute("MessageVerifyCode", messageCode);
@@ -168,11 +134,11 @@ public class VerifyCodeController {
     }
 
     /**
-     * @param input:   输入的六位短信验证码
+     * @param input: 输入的六位短信验证码
      * @param session: 会话
      * @description 校验输入的短信验证码是否正确
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/19
+     * @date 2021/11/19
      */
     @ApiOperation(value = "验证短信验证码")
     @GetMapping("/messageCode/check")
@@ -180,7 +146,7 @@ public class VerifyCodeController {
         try {
             // 从session中获取随机数
             String messageCode = (String) session.getAttribute("MessageVerifyCode");
-            if (RegexUtil.isBlank(messageCode)) {
+            if (regexUtil.isBlank(messageCode)) {
                 log.error("session中不存在对应的短信验证码");
                 return ResponseWrapper.markMessageCodeNotFound();
             }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 用户前端控制器
+ * 用户的前端控制器
  *
  * @author kuang
  * @since 2021-11-11
@@ -31,18 +31,19 @@ import java.util.List;
 @CrossOrigin
 public class UserController {
     @Autowired private IUserService userService;
+    @Autowired private RegexUtil regexUtil;
 
     /**
      * @description 判断用户是否已经登录
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/16
+     * @date 2021/11/16
      */
     @GetMapping("/auth")
     @ApiOperation("用户登录状态查询")
     @ResponseBody
     public ResponseWrapper isLogin(@RequestParam String redirect) {
         ResponseWrapper responseWrapper;
-        if (!RegexUtil.isLegalUrl(redirect)) {
+        if (!regexUtil.isLegalUrl(redirect)) {
             log.error("无效的URL格式");
             return ResponseWrapper.markUrlError();
         }
@@ -62,7 +63,7 @@ public class UserController {
      * @param pwd: 密码
      * @description 用户登录
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/16
+     * @date 2021/11/16
      */
     @GetMapping("/login")
     @ApiOperation("用户登录")
@@ -72,11 +73,15 @@ public class UserController {
             @RequestParam String pwd,
             @RequestParam(required = false) String redirect) {
         ResponseWrapper responseWrapper;
-        if (!RegexUtil.isBlank(redirect)) {
-            if (!RegexUtil.isLegalUrl(redirect)) {
+        if (!regexUtil.isBlank(redirect)) {
+            if (!regexUtil.isLegalUrl(redirect)) {
                 log.error("无效的URL格式");
                 return ResponseWrapper.markUrlError();
             }
+        }
+        if (!regexUtil.isLegalPhone(phone)) {
+            log.error("错误的电话格式");
+            return ResponseWrapper.markPhoneError();
         }
         if (!userService.phoneExists(phone)) {
             log.info(phone + "该账号未注册");
@@ -106,13 +111,13 @@ public class UserController {
      * @description 用户退出
      * @param id 用户id
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/16
+     * @date 2021/11/16
      */
     @GetMapping("/logout")
     @ApiOperation("用户退出")
     @ResponseBody
     public ResponseWrapper logout(@RequestParam(required = false) String id) {
-        if (RegexUtil.isBlank(id)) {
+        if (regexUtil.isBlank(id)) {
             StpUtil.logout(id);
         } else {
             StpUtil.logout();
@@ -124,7 +129,7 @@ public class UserController {
      * @param registerDTO: 用户注册提交的表单 数据的要求详情见RegisterDTO
      * @description 用户注册方法
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/14
+     * @date 2021/11/14
      */
     @PostMapping("/register")
     @ApiOperation("用户注册")
@@ -157,7 +162,7 @@ public class UserController {
      * @param updateDTO: 用户更新的数据表单 要求详情见UserUpdateDTO
      * @description 用户更新方法，不做任何检验，开发给管理员
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/14
+     * @date 2021/11/14
      */
     @PostMapping("/update")
     @ApiOperation("用户更新")
@@ -165,11 +170,11 @@ public class UserController {
     public ResponseWrapper updateUser(@RequestBody @Validated UserUpdateDTO updateDTO) {
         String phone = updateDTO.getPhone();
         String email = updateDTO.getEmail();
-        if (!RegexUtil.isBlank(phone) && !RegexUtil.isLegalPhone(phone)) {
+        if (!regexUtil.isBlank(phone) && !regexUtil.isLegalPhone(phone)) {
             log.warn("用户:" + updateDTO.getId() + "更新失败,错误的电话格式");
             return ResponseWrapper.markPhoneError();
         }
-        if (!RegexUtil.isBlank(email) && !RegexUtil.isLegalPhone(email)) {
+        if (!regexUtil.isBlank(email) && !regexUtil.isLegalPhone(email)) {
             log.warn("用户:" + updateDTO.getId() + "更新失败,错误的邮箱格式");
             return ResponseWrapper.markEmailError();
         }
@@ -189,7 +194,7 @@ public class UserController {
      * @param newPwd: 新密码
      * @description 用户更改密码的方法
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @data 2021/11/14
+     * @date 2021/11/14
      */
     @PutMapping("/changePwd")
     @ApiOperation("用户更改密码")

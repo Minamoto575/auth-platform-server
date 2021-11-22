@@ -3,7 +3,7 @@ package cn.krl.authplatformserver.common.response;
 /**
  * @description 自定义的响应码
  * @author kuang
- * @data 2021/10/24
+ * @date 2021/10/24
  */
 public enum ResponseCode {
 

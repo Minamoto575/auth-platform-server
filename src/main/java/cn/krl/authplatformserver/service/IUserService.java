@@ -20,7 +20,7 @@ public interface IUserService extends IService<User> {
      * @param phone: 用户名电话
      * @param password: 密码
      * @return: boolean
-     * @data 2021/11/11
+     * @date 2021/11/11
      */
     boolean loginCheck(String phone, String password);
 
@@ -29,7 +29,7 @@ public interface IUserService extends IService<User> {
      * @param password: 密码明文
      * @param salt: 盐
      * @return: java.lang.String 密码散列值
-     * @data 2021/11/11
+     * @date 2021/11/11
      */
     String hashPassword(String password, String salt);
 
@@ -37,7 +37,7 @@ public interface IUserService extends IService<User> {
      * @description 根据电话号码获取对应用户
      * @param phone: 电话号码
      * @return: User
-     * @data 2021/11/11
+     * @date 2021/11/11
      */
     User getUserByPhone(String phone);
 
@@ -45,7 +45,7 @@ public interface IUserService extends IService<User> {
      * @description 用户注册
      * @param registerDTO: 注册表单
      * @return: boolean
-     * @data 2021/11/11
+     * @date 2021/11/11
      */
     void registerUser(RegisterDTO registerDTO);
 
@@ -53,7 +53,7 @@ public interface IUserService extends IService<User> {
      * @description 检查电话号码是否被注册
      * @param phone: 电话号码
      * @return: boolean
-     * @data 2021/11/12
+     * @date 2021/11/12
      */
     boolean phoneExists(String phone);
 
@@ -61,7 +61,7 @@ public interface IUserService extends IService<User> {
      * @param email: 邮箱
      * @description 检查email是否被使用
      * @return: boolean
-     * @data 2021/11/12
+     * @date 2021/11/12
      */
     boolean emailExists(String email);
 
@@ -69,7 +69,7 @@ public interface IUserService extends IService<User> {
      * @param userUpdateDTO: 信息表单
      * @description 更新用户信息 不做验证 开放给管理员用
      * @return: void
-     * @data 2021/11/12
+     * @date 2021/11/12
      */
     void updateUser(UserUpdateDTO userUpdateDTO);
 
@@ -78,7 +78,7 @@ public interface IUserService extends IService<User> {
      * @param newPwd: 新密码
      * @description 修改密码
      * @return: void
-     * @data 2021/11/12
+     * @date 2021/11/12
      */
     void changePwd(String phone, String newPwd);
 
@@ -87,14 +87,14 @@ public interface IUserService extends IService<User> {
      * @param phone: 新的电话
      * @description 修改绑定的电话号码
      * @return: void
-     * @data 2021/11/15
+     * @date 2021/11/15
      */
     void changePhone(String id, String phone);
 
     /**
      * @description 列出所以的用户
      * @return: java.util.List<cn.krl.authplatformserver.model.dto.UserDTO>
-     * @data 2021/11/18
+     * @date 2021/11/18
      */
     List<UserDTO> listAll();
 
@@ -103,7 +103,7 @@ public interface IUserService extends IService<User> {
      * @param cur: 当前页码
      * @param size: 页的大小
      * @return: java.util.List<cn.krl.authplatformserver.model.dto.UserDTO>
-     * @data 2021/11/18
+     * @date 2021/11/18
      */
     List<UserDTO> listPage(int cur, int size);
 }

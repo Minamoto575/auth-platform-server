@@ -4,6 +4,7 @@ import cn.krl.authplatformserver.common.utils.RandomUtil;
 import cn.krl.authplatformserver.model.pojo.VerifyCode;
 import cn.krl.authplatformserver.service.IVerifyCodeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -17,18 +18,18 @@ import java.util.Random;
 /**
  * @author kuang
  * @description
- * @date 2021/11/12  17:01
+ * @date 2021/11/12 17:01
  */
 @Slf4j
 @Service
 public class VerifyCodeServiceImpl implements IVerifyCodeService {
 
-    private static final String[] FONT_TYPES = {"\u5b8b\u4f53", "\u65b0\u5b8b\u4f53", "\u9ed1\u4f53", "\u6977\u4f53", "\u96b6\u4e66"};
-
-    /**
-     * @description 验证码的长度
-     */
-    private static final int VALICATE_CODE_LENGTH = 4;
+    private final String[] FONT_TYPES = {
+        "\u5b8b\u4f53", "\u65b0\u5b8b\u4f53", "\u9ed1\u4f53", "\u6977\u4f53", "\u96b6\u4e66"
+    };
+    /** @description 验证码的长度 */
+    private final int VALICATE_CODE_LENGTH = 4;
+    @Autowired private RandomUtil randomUtil;
 
     /**
      * 设置背景颜色及大小，干扰线
@@ -37,16 +38,16 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
      * @param width
      * @param height
      */
-    private static void fillBackground(Graphics graphics, int width, int height) {
+    private void fillBackground(Graphics graphics, int width, int height) {
         // 填充背景
         graphics.setColor(Color.WHITE);
-        //设置矩形坐标x y 为0
+        // 设置矩形坐标x y 为0
         graphics.fillRect(0, 0, width, height);
 
         // 加入干扰线条
         for (int i = 0; i < 8; i++) {
-            //设置随机颜色算法参数
-            graphics.setColor(RandomUtil.randomColor(40, 150));
+            // 设置随机颜色算法参数
+            graphics.setColor(randomUtil.randomColor(40, 150));
             Random random = new Random();
             int x = random.nextInt(width);
             int y = random.nextInt(height);
@@ -70,10 +71,10 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
         fillBackground(graphics, width, height);
-        String randomStr = RandomUtil.randomString(VALICATE_CODE_LENGTH);
+        String randomStr = randomUtil.randomString(VALICATE_CODE_LENGTH);
         createCharacter(graphics, randomStr);
         graphics.dispose();
-        //设置JPEG格式
+        // 设置JPEG格式
         ImageIO.write(image, "JPEG", os);
         return randomStr;
     }
@@ -89,9 +90,8 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
     public VerifyCode generate(int width, int height) {
         VerifyCode verifyCode = null;
         try (
-            //将流的初始化放到这里就不需要手动关闭流
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ) {
+        // 将流的初始化放到这里就不需要手动关闭流
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(); ) {
             String code = generate(width, height, baos);
             verifyCode = new VerifyCode();
             verifyCode.setCode(code);
@@ -113,14 +113,16 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
     private void createCharacter(Graphics g, String randomStr) {
         char[] charArray = randomStr.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
-            //设置RGB颜色算法参数
-            g.setColor(new Color(50 + RandomUtil.nextInt(100),
-                50 + RandomUtil.nextInt(100), 50 + RandomUtil.nextInt(100)));
-            //设置字体大小，类型
-            g.setFont(new Font(FONT_TYPES[RandomUtil.nextInt(FONT_TYPES.length)], Font.BOLD, 26));
-            //设置x y 坐标
-            g.drawString(String.valueOf(charArray[i]), 15 * i + 5, 19 + RandomUtil.nextInt(8));
+            // 设置RGB颜色算法参数
+            g.setColor(
+                    new Color(
+                            50 + randomUtil.nextInt(100),
+                            50 + randomUtil.nextInt(100),
+                            50 + randomUtil.nextInt(100)));
+            // 设置字体大小，类型
+            g.setFont(new Font(FONT_TYPES[randomUtil.nextInt(FONT_TYPES.length)], Font.BOLD, 26));
+            // 设置x y 坐标
+            g.drawString(String.valueOf(charArray[i]), 15 * i + 5, 19 + randomUtil.nextInt(8));
         }
     }
-
 }

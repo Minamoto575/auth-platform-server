@@ -30,6 +30,7 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired private UserMapper userMapper;
+    @Autowired private SaltUtil saltUtil;
 
     @Override
     public boolean loginCheck(String phone, String password) {
@@ -59,7 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void registerUser(RegisterDTO registerDTO) {
         User user = new User();
         BeanUtils.copyProperties(registerDTO, user);
-        String salt = SaltUtil.getSalt(10);
+        String salt = saltUtil.getSalt(10);
         user.setSalt(salt);
         String hashedPwd = hashPassword(registerDTO.getPassword(), salt);
         user.setPassword(hashedPwd);

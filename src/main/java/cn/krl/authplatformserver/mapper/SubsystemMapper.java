@@ -2,15 +2,13 @@ package cn.krl.authplatformserver.mapper;
 
 import cn.krl.authplatformserver.model.po.Subsystem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
+ * Mapper 接口
  *
  * @author kuang
  * @since 2021-11-22
  */
-public interface SubsystemMapper extends BaseMapper<Subsystem> {
-
-}
+@Mapper
+public interface SubsystemMapper extends BaseMapper<Subsystem> {}

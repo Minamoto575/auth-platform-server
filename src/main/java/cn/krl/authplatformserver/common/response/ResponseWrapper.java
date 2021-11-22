@@ -282,6 +282,18 @@ public class ResponseWrapper {
     }
 
     /**
+     * 上传图片失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markUploadImageError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.UPLOAD_IMAGE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.UPLOAD_IMAGE_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
      * 包装ResponseWrapper
      *
      * @param tag Tag名称

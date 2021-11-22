@@ -39,7 +39,7 @@ public enum ResponseCode {
     MESSAGECODE_NOT_FOUND(416, "session中未找到短信验证码"),
     MESSAGECODE_CHECK_ERROR(416, "短信验证码检查失败"),
     REGISTER_ERROR(417, "注册失败"),
-
+    UPLOAD_IMAGE_ERROR(418, "上传图片失败"),
     SYSTEM_ERROR(500, "系统异常"),
     /** 900以上，判定为前端同一处理的异常 */
     API_NOT_PER(900, "没有该接口的访问权限");

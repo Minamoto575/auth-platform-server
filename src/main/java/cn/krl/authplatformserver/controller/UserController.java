@@ -4,8 +4,8 @@ import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
-import cn.krl.authplatformserver.model.dto.RegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
@@ -126,7 +126,7 @@ public class UserController {
     }
 
     /**
-     * @param registerDTO: 用户注册提交的表单 数据的要求详情见RegisterDTO
+     * @param userRegisterDTO: 用户注册提交的表单 数据的要求详情见RegisterDTO
      * @description 用户注册方法
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/14
@@ -134,10 +134,10 @@ public class UserController {
     @PostMapping("/register")
     @ApiOperation("用户注册")
     @ResponseBody
-    public ResponseWrapper registerUser(@RequestBody @Validated RegisterDTO registerDTO) {
+    public ResponseWrapper registerUser(@RequestBody @Validated UserRegisterDTO userRegisterDTO) {
         ResponseWrapper responseWrapper;
-        String phone = registerDTO.getPhone();
-        String email = registerDTO.getEmail();
+        String phone = userRegisterDTO.getPhone();
+        String email = userRegisterDTO.getEmail();
         if (userService.phoneExists(phone)) {
             log.warn(phone + "电话已被注册，注册失败！");
             return ResponseWrapper.markPhoneExist();
@@ -147,7 +147,7 @@ public class UserController {
             return ResponseWrapper.markEmailExist();
         }
         try {
-            userService.registerUser(registerDTO);
+            userService.registerUser(userRegisterDTO);
             log.info(phone + "注册成功");
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
@@ -168,8 +168,13 @@ public class UserController {
     @ApiOperation("用户更新")
     @ResponseBody
     public ResponseWrapper updateUser(@RequestBody @Validated UserUpdateDTO updateDTO) {
+        Integer id = updateDTO.getId();
         String phone = updateDTO.getPhone();
         String email = updateDTO.getEmail();
+        if (id == null || userService.getById(id) == null) {
+            log.error("不存在用户id=" + id);
+            return ResponseWrapper.markUserNotFoundError();
+        }
         if (!regexUtil.isBlank(phone) && !regexUtil.isLegalPhone(phone)) {
             log.warn("用户:" + updateDTO.getId() + "更新失败,错误的电话格式");
             return ResponseWrapper.markPhoneError();

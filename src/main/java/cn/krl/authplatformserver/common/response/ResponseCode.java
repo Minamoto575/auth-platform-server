@@ -40,6 +40,10 @@ public enum ResponseCode {
     MESSAGECODE_CHECK_ERROR(416, "短信验证码检查失败"),
     REGISTER_ERROR(417, "注册失败"),
     UPLOAD_IMAGE_ERROR(418, "上传图片失败"),
+    SUBSYSTEM_REGISTER_ERROR(419, "子系统记录注册失败"),
+    SUBSYSTEM_UPDATE_ERROR(420, "子系统记录更新失败"),
+    SUBSYSTEM_NOT_FOUND_ERROR(421, "该子系统不存在"),
+    USER_NOT_FOUND_ERROR(422, "该用户不存在"),
     SYSTEM_ERROR(500, "系统异常"),
     /** 900以上，判定为前端同一处理的异常 */
     API_NOT_PER(900, "没有该接口的访问权限");

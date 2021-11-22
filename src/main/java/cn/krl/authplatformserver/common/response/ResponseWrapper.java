@@ -292,6 +292,50 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.UPLOAD_IMAGE_ERROR.getMsg());
         return responseWrapper;
     }
+    /**
+     * 子系统记录注册失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markSubsystemRegisterError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.SUBSYSTEM_REGISTER_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.SUBSYSTEM_REGISTER_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /**
+     * 子系统记录更新失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markSubsystemUpdateError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.SUBSYSTEM_UPDATE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.SUBSYSTEM_UPDATE_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /**
+     * 子系统记录不存在
+     *
+     * @return
+     */
+    public static ResponseWrapper markSubsystemNotFoundError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.SUBSYSTEM_NOT_FOUND_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.SUBSYSTEM_NOT_FOUND_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /**
+     * 用户不存在
+     *
+     * @return
+     */
+    public static ResponseWrapper markUserNotFoundError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.USER_NOT_FOUND_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.USER_NOT_FOUND_ERROR.getMsg());
+        return responseWrapper;
+    }
 
     /**
      * 包装ResponseWrapper

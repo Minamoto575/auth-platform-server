@@ -1,7 +1,7 @@
 package cn.krl.authplatformserver.service;
 
-import cn.krl.authplatformserver.model.dto.RegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -43,11 +43,11 @@ public interface IUserService extends IService<User> {
 
     /**
      * @description 用户注册
-     * @param registerDTO: 注册表单
+     * @param userRegisterDTO: 注册表单
      * @return: boolean
      * @date 2021/11/11
      */
-    void registerUser(RegisterDTO registerDTO);
+    void registerUser(UserRegisterDTO userRegisterDTO);
 
     /**
      * @description 检查电话号码是否被注册

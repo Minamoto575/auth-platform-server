@@ -1,27 +1,21 @@
-package cn.krl.authplatformserver.model.po;
+package cn.krl.authplatformserver.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
-/**
- * @author kuang
- * @since 2021-11-22
+/***
+ * @description: 子系统传输对象
+ * @author: kuang
+ * @date: 2021/11/22
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "子系统对象", description = "")
-public class Subsystem implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@ApiModel(value = "子系统展示的表单", description = "")
+public class SubsystemDTO {
 
     @ApiModelProperty(value = "id")
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty(value = "子系统名称")

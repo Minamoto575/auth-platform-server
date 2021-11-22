@@ -2,8 +2,8 @@ package cn.krl.authplatformserver.service.Impl;
 
 import cn.krl.authplatformserver.common.utils.SaltUtil;
 import cn.krl.authplatformserver.mapper.UserMapper;
-import cn.krl.authplatformserver.model.dto.RegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
@@ -57,12 +57,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void registerUser(RegisterDTO registerDTO) {
+    public void registerUser(UserRegisterDTO userRegisterDTO) {
         User user = new User();
-        BeanUtils.copyProperties(registerDTO, user);
+        BeanUtils.copyProperties(userRegisterDTO, user);
         String salt = saltUtil.getSalt(10);
         user.setSalt(salt);
-        String hashedPwd = hashPassword(registerDTO.getPassword(), salt);
+        String hashedPwd = hashPassword(userRegisterDTO.getPassword(), salt);
         user.setPassword(hashedPwd);
         user.setGmtCreate(System.currentTimeMillis());
         user.setGmtModified(System.currentTimeMillis());

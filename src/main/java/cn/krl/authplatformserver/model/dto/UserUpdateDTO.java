@@ -11,12 +11,12 @@ import javax.validation.constraints.NotBlank;
 /**
  * @author kuang
  * @description 用户更新表单
- * @date 2021/11/12  15:24
+ * @date 2021/11/12 15:24
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("用户注册需要提交的表单")
+@ApiModel("用户更新需要提交的表单")
 public class UserUpdateDTO {
 
     @ApiModelProperty(value = "用户ID")

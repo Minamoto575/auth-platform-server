@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("用户注册需要提交的表单")
-public class RegisterDTO {
+public class UserRegisterDTO {
 
     @ApiModelProperty(value = "用户名")
     @Length(min = 1, max = 10, message = "用户名长度为1-10个字符")

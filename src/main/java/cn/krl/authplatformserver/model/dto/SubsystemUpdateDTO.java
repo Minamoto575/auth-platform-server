@@ -1,27 +1,23 @@
-package cn.krl.authplatformserver.model.po;
+package cn.krl.authplatformserver.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 /**
- * @author kuang
- * @since 2021-11-22
+ * @description: 子系统注册与更新的表单
+ * @author: kuang
+ * @date: 2021/11/22
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "子系统对象", description = "")
-public class Subsystem implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@ApiModel(value = "子系统注册与更新的表单", description = "")
+@AllArgsConstructor
+@NoArgsConstructor
+public class SubsystemUpdateDTO {
 
     @ApiModelProperty(value = "id")
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty(value = "子系统名称")
@@ -35,12 +31,6 @@ public class Subsystem implements Serializable {
 
     @ApiModelProperty(value = "图标的url")
     private String iconUrl;
-
-    @ApiModelProperty(value = "创建时间")
-    private Long gmtCreate;
-
-    @ApiModelProperty(value = "最新的修改时间")
-    private Long gmtModified;
 
     @ApiModelProperty(value = "禁用 （1禁用，0不禁用）")
     private Boolean disabled;

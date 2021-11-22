@@ -28,11 +28,11 @@ public class CodeGenerator {
         // 数据源配置
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setUrl(
-            "jdbc:mysql://localhost:3306/cas?serverTimezone=GMT%2B8&useUnicode=true"
-                + "&useSSL=false&characterEncoding=utf8");
+                "jdbc:mysql://localhost:13306/sso_center?serverTimezone=GMT%2B8&useUnicode=true"
+                        + "&useSSL=false&characterEncoding=utf8");
         dataSourceConfig.setDriverName("com.mysql.cj.jdbc.Driver");
-        dataSourceConfig.setUsername("root");
-        dataSourceConfig.setPassword("990225");
+        dataSourceConfig.setUsername("sso_center");
+        dataSourceConfig.setPassword("X6ZogX$WD%@uCU");
 
         autoGenerator.setDataSource(dataSourceConfig);
 
@@ -51,7 +51,7 @@ public class CodeGenerator {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // 对那一张表生成代码
-        strategy.setInclude("user");
+        strategy.setInclude("user", "subsystem");
         // 数据库表映射到实体的命名策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 数据库表字段映射到实体的命名策略

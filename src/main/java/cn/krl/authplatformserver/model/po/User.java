@@ -42,7 +42,7 @@ public class User implements Serializable {
     private Long gmtCreate;
 
     @ApiModelProperty(value = "最新修改时间")
-    private Long gmtModifed;
+    private Long gmtModified;
 
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;

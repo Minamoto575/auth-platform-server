@@ -64,7 +64,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String hashedPwd = hashPassword(registerDTO.getPassword(), salt);
         user.setPassword(hashedPwd);
         user.setGmtCreate(System.currentTimeMillis());
-        user.setGmtModifed(System.currentTimeMillis());
+        user.setGmtModified(System.currentTimeMillis());
         user.setDisabled(false);
         user.setExpired(false);
         userMapper.insert(user);
@@ -96,7 +96,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         BeanUtils.copyProperties(userUpdateDTO, user);
         user.setPassword(hashedPwd);
-        user.setGmtModifed(System.currentTimeMillis());
+        user.setGmtModified(System.currentTimeMillis());
 
         userMapper.updateById(user);
     }
@@ -109,7 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String salt = user.getSalt();
         String hashedPwd = hashPassword(newPwd, salt);
         user.setPassword(hashedPwd);
-        user.setGmtModifed(System.currentTimeMillis());
+        user.setGmtModified(System.currentTimeMillis());
         userMapper.updateById(user);
     }
 
@@ -117,7 +117,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void changePhone(String id, String phone) {
         User user = userMapper.selectById(id);
         user.setPhone(phone);
-        user.setGmtModifed(System.currentTimeMillis());
+        user.setGmtModified(System.currentTimeMillis());
     }
 
     @Override

@@ -115,4 +115,13 @@ public interface IUserService extends IService<User> {
      * @date 2021/11/18
      */
     List<UserDTO> listPage(int cur, int size);
+
+    /**
+     * @description: 更新用户登录的最新ip地址
+     * @param: phone 电话
+     * @param: ip ip地址
+     * @author kuang
+     * @date: 2021/11/23
+     */
+    void updateIp(String phone, String ip);
 }

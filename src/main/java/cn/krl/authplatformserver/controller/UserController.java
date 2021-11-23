@@ -6,6 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.AliMessageUtil;
 import cn.krl.authplatformserver.common.utils.ImageCodeUtil;
+import cn.krl.authplatformserver.common.utils.IpUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
@@ -38,6 +39,7 @@ public class UserController {
     @Autowired private RegexUtil regexUtil;
     @Autowired private AliMessageUtil aliMessageUtil;
     @Autowired private ImageCodeUtil imageCodeUtil;
+    @Autowired private IpUtil ipUtil;
 
     /**
      * @description 判断用户是否已经登录
@@ -78,7 +80,7 @@ public class UserController {
             HttpServletRequest request,
             @RequestParam String phone,
             @RequestParam String pwd,
-            @RequestParam String imageCode,
+            @RequestParam(required = false) String imageCode,
             @RequestParam(required = false) String redirect) {
         ResponseWrapper responseWrapper;
         if (!regexUtil.isBlank(redirect)) {
@@ -105,12 +107,17 @@ public class UserController {
         if (userService.loginCheckByPhone(phone, pwd)) {
             User user = userService.getUserByPhone(phone);
             StpUtil.login(user.getId());
+            // 封装携带的参数
             responseWrapper = ResponseWrapper.markSuccess();
             responseWrapper.setExtra("token", StpUtil.getTokenValue());
             String ticket = SaSsoUtil.createTicket(user.getId());
             responseWrapper.setExtra("ticket", ticket);
             responseWrapper.setExtra("phone", phone);
             responseWrapper.setExtra("uid", user.getId());
+            // 更新最新登录的ip地址
+            String ip = ipUtil.getIpAddress(request);
+            userService.updateIp(phone, ip);
+
             log.info(phone + "登录成功");
             return responseWrapper;
         } else {
@@ -148,7 +155,8 @@ public class UserController {
     @PostMapping("/register")
     @ApiOperation("用户注册")
     @ResponseBody
-    public ResponseWrapper registerUser(@RequestBody @Validated UserRegisterDTO userRegisterDTO) {
+    public ResponseWrapper registerUser(
+            HttpServletRequest request, @RequestBody @Validated UserRegisterDTO userRegisterDTO) {
         ResponseWrapper responseWrapper;
         String messageCode = userRegisterDTO.getMessageCode();
         String phone = userRegisterDTO.getPhone();
@@ -173,6 +181,9 @@ public class UserController {
         try {
             userService.registerUser(userRegisterDTO);
             log.info(phone + "注册成功");
+            // 更新最新登录的ip地址
+            String ip = ipUtil.getIpAddress(request);
+            userService.updateIp(phone, ip);
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
             responseWrapper = ResponseWrapper.markRegisterError();

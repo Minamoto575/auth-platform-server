@@ -148,6 +148,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return users2UserDTOs(users);
     }
 
+    @Override
+    public void updateIp(String phone, String ip) {
+        User user = this.getUserByPhone(phone);
+        user.setLastIp(ip);
+        userMapper.updateById(user);
+    }
+
     /**
      * @description: 封装成DTOList返回给前端
      * @param: users

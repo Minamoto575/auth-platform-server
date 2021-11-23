@@ -219,10 +219,10 @@ public class UserController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/14
      */
-    @PutMapping("/changePwd")
-    @ApiOperation("用户更改密码")
+    @PutMapping("/changePwd/oldPwd")
+    @ApiOperation("用户更改密码(通过旧密码修改)")
     @ResponseBody
-    public ResponseWrapper changePwd(
+    public ResponseWrapper changePwdByOldPwd(
             @RequestParam String phone, @RequestParam String oldPwd, @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
         if (!userService.loginCheck(phone, oldPwd)) {
@@ -239,11 +239,40 @@ public class UserController {
         return responseWrapper;
     }
 
+    @PutMapping("/changePwd/phone")
+    @ApiOperation("用户更改密码(通过电话号码和验证码修改)")
+    @ResponseBody
+    public ResponseWrapper changePwdByPhone(
+            @RequestParam String phone,
+            @RequestParam String messageCode,
+            @RequestParam String newPwd) {
+        ResponseWrapper responseWrapper;
+        boolean checkMessageCode = aliMessageUtil.checkMessageCode(messageCode, phone);
+        if (!checkMessageCode) {
+            log.error("验证码检查出错");
+            return ResponseWrapper.markMessageCodeCheckError();
+        }
+        try {
+            userService.changePwd(phone, newPwd);
+            responseWrapper = ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error(phone + "更改密码失败");
+            responseWrapper = ResponseWrapper.markChangePwdError();
+        }
+        return responseWrapper;
+    }
+
     @PutMapping("/changePhone")
     @ApiOperation("用户更改电话")
     @ResponseBody
-    public ResponseWrapper changePwd(@RequestParam String id, @RequestParam String phone) {
+    public ResponseWrapper changePhone(
+            @RequestParam String id, @RequestParam String phone, @RequestParam String messageCode) {
         ResponseWrapper responseWrapper;
+        boolean checkMessageCode = aliMessageUtil.checkMessageCode(messageCode, phone);
+        if (!checkMessageCode) {
+            log.error("验证码检查出错");
+            return ResponseWrapper.markMessageCodeCheckError();
+        }
         try {
             userService.changePhone(id, phone);
             log.info("用户id：" + id + "成功修改新的电话：" + phone);
@@ -289,7 +318,7 @@ public class UserController {
     @GetMapping("/list/page")
     @ApiOperation("分页获取用户")
     @ResponseBody
-    public ResponseWrapper listPage(int cur, int size) {
+    public ResponseWrapper listPage(@RequestParam int cur, @RequestParam int size) {
         ResponseWrapper responseWrapper;
         try {
             List<UserDTO> users = userService.listPage(cur, size);

@@ -3,6 +3,8 @@ package cn.krl.authplatformserver.controller;
 import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
+import cn.krl.authplatformserver.common.utils.AliMessageUtil;
+import cn.krl.authplatformserver.common.utils.ImageCodeUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,6 +35,8 @@ import java.util.List;
 public class UserController {
     @Autowired private IUserService userService;
     @Autowired private RegexUtil regexUtil;
+    @Autowired private AliMessageUtil aliMessageUtil;
+    @Autowired private ImageCodeUtil imageCodeUtil;
 
     /**
      * @description 判断用户是否已经登录
@@ -69,8 +74,10 @@ public class UserController {
     @ApiOperation("用户登录")
     @ResponseBody
     public ResponseWrapper login(
+            HttpServletRequest request,
             @RequestParam String phone,
             @RequestParam String pwd,
+            @RequestParam String imageCode,
             @RequestParam(required = false) String redirect) {
         ResponseWrapper responseWrapper;
         if (!regexUtil.isBlank(redirect)) {
@@ -87,7 +94,12 @@ public class UserController {
             log.info(phone + "该账号未注册");
             return ResponseWrapper.markAccountError();
         }
-
+        String sessionId = request.getSession().getId();
+        boolean checkCode = imageCodeUtil.checkImageCode(imageCode, sessionId);
+        if (!checkCode) {
+            log.error("验证码检查出错");
+            return ResponseWrapper.markImageCodeCheckError();
+        }
         if (userService.loginCheck(phone, pwd)) {
             User user = userService.getUserByPhone(phone);
             StpUtil.login(user.getId());
@@ -136,8 +148,14 @@ public class UserController {
     @ResponseBody
     public ResponseWrapper registerUser(@RequestBody @Validated UserRegisterDTO userRegisterDTO) {
         ResponseWrapper responseWrapper;
+        String messageCode = userRegisterDTO.getMessageCode();
         String phone = userRegisterDTO.getPhone();
         String email = userRegisterDTO.getEmail();
+        boolean check = aliMessageUtil.checkMessageCode(messageCode, phone);
+        if (!check) {
+            return ResponseWrapper.markMessageCodeCheckError();
+        }
+
         if (userService.phoneExists(phone)) {
             log.warn(phone + "电话已被注册，注册失败！");
             return ResponseWrapper.markPhoneExist();

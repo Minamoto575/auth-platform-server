@@ -2,6 +2,7 @@ package cn.krl.authplatformserver.controller;
 
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.AliMessageUtil;
+import cn.krl.authplatformserver.common.utils.RedisUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.pojo.VerifyCode;
 import cn.krl.authplatformserver.service.IUserService;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * @author kuang
@@ -33,6 +33,7 @@ public class VerifyCodeController {
     @Autowired private IUserService userService;
     @Autowired private RegexUtil regexUtil;
     @Autowired private AliMessageUtil messageUtil;
+    @Autowired private RedisUtil redisUtil;
 
     /**
      * @param request:
@@ -48,6 +49,10 @@ public class VerifyCodeController {
             VerifyCode imageCode = verifyCodeService.generate(80, 28);
             String code = imageCode.getCode();
             log.info("生成登录图形验证码：" + code);
+            // 将验证码存入redis
+            String sessionId = request.getSession().getId();
+            String key = "ImageVerifyCode?sessionId=" + sessionId;
+            redisUtil.set(key, code, 10 * 60);
             request.getSession().setAttribute("ImageVerifyCode", code);
             // 设置响应头
             response.setHeader("Pragma", "no-cache");
@@ -66,46 +71,14 @@ public class VerifyCodeController {
     }
 
     /**
-     * @param input: 输入的四位图形验证码
-     * @param session: 会话
-     * @description 校验输入的图形验证码是否正确
-     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @date 2021/11/19
-     */
-    @ApiOperation(value = "验证图形验证码")
-    @GetMapping("/imageCode/check")
-    public ResponseWrapper checkImageCode(@RequestParam String input, HttpSession session) {
-        try {
-            // 从session中获取随机数
-            String imageCode = (String) session.getAttribute("ImageVerifyCode");
-            if (regexUtil.isBlank(imageCode)) {
-                log.error("session中不存在对应的图形验证码");
-                return ResponseWrapper.markImageCodeNotFound();
-            }
-            if (imageCode.equalsIgnoreCase(input)) {
-                log.info("图形验证码校验一致");
-                return ResponseWrapper.markSuccess();
-            } else {
-                log.warn("图形验证码校验不一致 " + input + " " + imageCode);
-                return ResponseWrapper.markImageCodeNotConsistent();
-            }
-        } catch (Exception e) {
-            log.error("图形验证码校验失败" + e.getMessage());
-            e.printStackTrace();
-            return ResponseWrapper.markImageCodeCheckError();
-        }
-    }
-
-    /**
      * @param phone: 电话
-     * @param request:
      * @description 获取短信验证码 注册时使用
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/14
      */
     @ApiOperation(value = "手机短信，用于注册")
     @GetMapping("/messageCode/get")
-    public ResponseWrapper sendMessageCode(@RequestParam String phone, HttpServletRequest request) {
+    public ResponseWrapper sendMessageCode(@RequestParam String phone) {
         ResponseWrapper responseWrapper;
         if (!regexUtil.isLegalPhone(phone)) {
             log.error(phone + "错误的电话格式");
@@ -120,7 +93,8 @@ public class VerifyCodeController {
             if (messageUtil.sendMessage(phone, messageCode)) {
                 log.info(phone + "短信发送成功" + messageCode);
                 responseWrapper = ResponseWrapper.markSuccess();
-                request.getSession().setAttribute("MessageVerifyCode", messageCode);
+                String key = "MessageVerifyCode?phone=" + phone;
+                redisUtil.set(key, messageCode, 10 * 60);
             } else {
                 log.error(phone + "短信发送失败" + messageCode);
                 responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
@@ -131,36 +105,5 @@ public class VerifyCodeController {
             responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
         }
         return responseWrapper;
-    }
-
-    /**
-     * @param input: 输入的六位短信验证码
-     * @param session: 会话
-     * @description 校验输入的短信验证码是否正确
-     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @date 2021/11/19
-     */
-    @ApiOperation(value = "验证短信验证码")
-    @GetMapping("/messageCode/check")
-    public ResponseWrapper checkMessageCode(@RequestParam String input, HttpSession session) {
-        try {
-            // 从session中获取随机数
-            String messageCode = (String) session.getAttribute("MessageVerifyCode");
-            if (regexUtil.isBlank(messageCode)) {
-                log.error("session中不存在对应的短信验证码");
-                return ResponseWrapper.markMessageCodeNotFound();
-            }
-            if (messageCode.equalsIgnoreCase(input)) {
-                log.info("短信验证码校验一致");
-                return ResponseWrapper.markSuccess();
-            } else {
-                log.warn("短信验证码校验不一致 " + input + " " + messageCode);
-                return ResponseWrapper.markMessageCodeNotConsistent();
-            }
-        } catch (Exception e) {
-            log.error("短信验证码校验失败 " + e.getMessage());
-            e.printStackTrace();
-            return ResponseWrapper.markMessageCodeCheckError();
-        }
     }
 }

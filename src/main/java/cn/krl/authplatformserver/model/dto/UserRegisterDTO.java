@@ -41,4 +41,9 @@ public class UserRegisterDTO {
     @NotBlank(message = "邮箱不能为空")
     @Email
     private String email;
+
+    @ApiModelProperty(value = "短信验证码")
+    @NotBlank(message = "短信验证码不能为空")
+    @Length(min = 6, max = 6, message = "短信验证码为6位")
+    private String messageCode;
 }

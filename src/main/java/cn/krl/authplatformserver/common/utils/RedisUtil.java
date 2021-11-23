@@ -1,12 +1,10 @@
 package cn.krl.authplatformserver.common.utils;
 
-
 /**
  * @author kuang
  * @description redis工具类
- * @date 2021/11/11  13:19
+ * @date 2021/11/11 13:19
  */
-
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +14,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtil {
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    @Resource private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 设置键值
      *
-     * @param key   键
+     * @param key 键
      * @param value 值
      * @return true成功 false失败
      */
@@ -39,9 +36,9 @@ public class RedisUtil {
     /**
      * 设置键值同时指定过期时间
      *
-     * @param key   键
+     * @param key 键
      * @param value 值
-     * @param time  时间（秒） time要大于0，如果time小于等于0，将设置无期限
+     * @param time 时间（秒） time要大于0，如果time小于等于0，将设置无期限
      * @return true成功 false失败
      */
     public boolean set(String key, Object value, long time) {
@@ -103,4 +100,12 @@ public class RedisUtil {
         }
     }
 
+    public boolean delete(String key) {
+        try {
+            return redisTemplate.delete(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

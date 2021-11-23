@@ -1,5 +1,7 @@
 package cn.krl.authplatformserver.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -11,15 +13,15 @@ import java.util.Random;
  * @date 2021/11/12 17:04
  */
 @Component
-public class RandomUtil extends org.apache.commons.lang3.RandomUtils {
+@Slf4j
+public class ImageCodeUtil extends org.apache.commons.lang3.RandomUtils {
 
     private static final char[] CODE_SEQ = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
         'U', 'V', 'W', 'X', 'Y', 'Z', '2', '3', '4', '5', '6', '7', '8', '9'
     };
-
     private final char[] NUMBER_ARRAY = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
+    @Autowired private RedisUtil redisUtil;
     private Random random = new Random();
 
     public String randomString(int length) {
@@ -54,5 +56,31 @@ public class RandomUtil extends org.apache.commons.lang3.RandomUtils {
 
     public int nextInt(int bound) {
         return random.nextInt(bound);
+    }
+
+    /**
+     * @description: 检查图形验证码
+     * @param: input 输入的验证码
+     * @param: sessionId 会话id（key的一部分）
+     * @author kuang
+     * @date: 2021/11/23
+     */
+    public boolean checkImageCode(String input, String sessionId) {
+        String key = "ImageVerifyCode?sessionId=" + sessionId;
+        if (!redisUtil.hasKey(key)) {
+            log.error("短信验证码过期");
+            return false;
+        }
+
+        String imageCode = (String) redisUtil.get(key);
+        if (imageCode.equalsIgnoreCase(input)) {
+            log.info("图形验证码校验一致");
+            // 用完失效
+            redisUtil.delete(key);
+            return true;
+        } else {
+            log.warn("图形验证码校验不一致 " + input + " " + imageCode);
+            return false;
+        }
     }
 }

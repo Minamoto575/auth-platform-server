@@ -22,7 +22,16 @@ public interface IUserService extends IService<User> {
      * @return: boolean
      * @date 2021/11/11
      */
-    boolean loginCheck(String phone, String password);
+    boolean loginCheckByPhone(String phone, String password);
+
+    /**
+     * @description 进行登录检查
+     * @param Id: 用户名id
+     * @param password: 密码
+     * @return: boolean
+     * @date 2021/11/11
+     */
+    boolean loginCheckById(Integer Id, String password);
 
     /**
      * @description 对密码进行单向散列 带盐
@@ -89,7 +98,7 @@ public interface IUserService extends IService<User> {
      * @return: void
      * @date 2021/11/15
      */
-    void changePhone(String id, String phone);
+    void changePhone(Integer id, String phone);
 
     /**
      * @description 列出所以的用户

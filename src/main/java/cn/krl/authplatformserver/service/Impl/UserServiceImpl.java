@@ -33,9 +33,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired private SaltUtil saltUtil;
 
     @Override
-    public boolean loginCheck(String phone, String password) {
+    public boolean loginCheckByPhone(String phone, String password) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("phone", phone);
+        User user = userMapper.selectOne(queryWrapper);
+        String hashedPwd = hashPassword(password, user.getSalt());
+        return hashedPwd.equals(user.getPassword());
+    }
+
+    @Override
+    public boolean loginCheckById(Integer id, String password) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id", id);
         User user = userMapper.selectOne(queryWrapper);
         String hashedPwd = hashPassword(password, user.getSalt());
         return hashedPwd.equals(user.getPassword());
@@ -115,10 +124,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void changePhone(String id, String phone) {
+    public void changePhone(Integer id, String phone) {
         User user = userMapper.selectById(id);
         user.setPhone(phone);
         user.setGmtModified(System.currentTimeMillis());
+        userMapper.updateById(user);
     }
 
     @Override
@@ -138,6 +148,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return users2UserDTOs(users);
     }
 
+    /**
+     * @description: 封装成DTOList返回给前端
+     * @param: users
+     * @author kuang
+     * @date: 2021/11/23
+     */
     public List<UserDTO> users2UserDTOs(List<User> users) {
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {

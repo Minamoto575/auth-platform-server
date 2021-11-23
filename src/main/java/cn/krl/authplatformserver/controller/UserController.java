@@ -1,5 +1,6 @@
 package cn.krl.authplatformserver.controller;
 
+import cn.dev33.satoken.annotation.SaCheckSafe;
 import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
@@ -94,13 +95,14 @@ public class UserController {
             log.info(phone + "该账号未注册");
             return ResponseWrapper.markAccountError();
         }
-        String sessionId = request.getSession().getId();
-        boolean checkCode = imageCodeUtil.checkImageCode(imageCode, sessionId);
-        if (!checkCode) {
-            log.error("验证码检查出错");
-            return ResponseWrapper.markImageCodeCheckError();
-        }
-        if (userService.loginCheck(phone, pwd)) {
+        // //登录的验证码检查
+        // String sessionId = request.getSession().getId();
+        // boolean checkCode = imageCodeUtil.checkImageCode(imageCode, sessionId);
+        // if (!checkCode) {
+        //     log.error("验证码检查出错");
+        //     return ResponseWrapper.markImageCodeCheckError();
+        // }
+        if (userService.loginCheckByPhone(phone, pwd)) {
             User user = userService.getUserByPhone(phone);
             StpUtil.login(user.getId());
             responseWrapper = ResponseWrapper.markSuccess();
@@ -151,6 +153,8 @@ public class UserController {
         String messageCode = userRegisterDTO.getMessageCode();
         String phone = userRegisterDTO.getPhone();
         String email = userRegisterDTO.getEmail();
+
+        // 短信验证码检查
         boolean check = aliMessageUtil.checkMessageCode(messageCode, phone);
         if (!check) {
             return ResponseWrapper.markMessageCodeCheckError();
@@ -164,6 +168,8 @@ public class UserController {
             log.warn(email + "邮箱已被使用，注册失败！");
             return ResponseWrapper.markEmailExist();
         }
+
+        // 注册
         try {
             userService.registerUser(userRegisterDTO);
             log.info(phone + "注册成功");
@@ -201,6 +207,8 @@ public class UserController {
             log.warn("用户:" + updateDTO.getId() + "更新失败,错误的邮箱格式");
             return ResponseWrapper.markEmailError();
         }
+
+        // 更新用户
         try {
             userService.updateUser(updateDTO);
             log.info("用户:" + updateDTO.getId() + "更新成功");
@@ -225,7 +233,7 @@ public class UserController {
     public ResponseWrapper changePwdByOldPwd(
             @RequestParam String phone, @RequestParam String oldPwd, @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
-        if (!userService.loginCheck(phone, oldPwd)) {
+        if (!userService.loginCheckByPhone(phone, oldPwd)) {
             log.warn(phone + "旧密码验证失败");
             return ResponseWrapper.markAccountError();
         }
@@ -239,6 +247,14 @@ public class UserController {
         return responseWrapper;
     }
 
+    /**
+     * @description: 用户通过绑定的电话号码和验证码修改登录密码
+     * @param: phone 电话
+     * @param: messageCode 验证码
+     * @param: newPwd 新密码
+     * @author kuang
+     * @date: 2021/11/23
+     */
     @PutMapping("/changePwd/phone")
     @ApiOperation("用户更改密码(通过电话号码和验证码修改)")
     @ResponseBody
@@ -262,12 +278,35 @@ public class UserController {
         return responseWrapper;
     }
 
+    /**
+     * @description:用户更改绑定的电话号码
+     * @param: id 用户id
+     * @param: phone 新电话
+     * @param: messageCode 短信验证码
+     * @author kuang
+     * @date: 2021/11/23
+     */
+    @SaCheckSafe
     @PutMapping("/changePhone")
     @ApiOperation("用户更改电话")
     @ResponseBody
     public ResponseWrapper changePhone(
-            @RequestParam String id, @RequestParam String phone, @RequestParam String messageCode) {
+            @RequestParam Integer id,
+            @RequestParam String phone,
+            @RequestParam String pwd,
+            @RequestParam String messageCode) {
         ResponseWrapper responseWrapper;
+        // 检查电话
+        if (userService.phoneExists(phone)) {
+            log.error("该电话已经被注册");
+            return ResponseWrapper.markPhoneExist();
+        }
+        // 检查密码
+        if (!userService.loginCheckById(id, pwd)) {
+            log.error(id + "密码错误");
+            return ResponseWrapper.markAccountError();
+        }
+        // 检查验证码
         boolean checkMessageCode = aliMessageUtil.checkMessageCode(messageCode, phone);
         if (!checkMessageCode) {
             log.error("验证码检查出错");

@@ -115,7 +115,8 @@ public class UserController {
             responseWrapper.setExtra("phone", phone);
             responseWrapper.setExtra("uid", user.getId());
             // 更新最新登录的ip地址
-            String ip = ipUtil.getIpAddress(request);
+            String ip = request.getRemoteAddr();
+            log.info("ip:" + ip);
             userService.updateIp(phone, ip);
 
             log.info(phone + "登录成功");

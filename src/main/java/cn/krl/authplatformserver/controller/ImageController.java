@@ -1,5 +1,6 @@
 package cn.krl.authplatformserver.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.ImageUtil;
 import io.swagger.annotations.Api;
@@ -23,6 +24,8 @@ import java.util.UUID;
 @Api(tags = "图片的api")
 public class ImageController {
 
+    private final String ADMIN = "admin";
+    private final String USER = "user";
     @Autowired private ImageUtil imageUtil;
 
     /**
@@ -31,8 +34,9 @@ public class ImageController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/22
      */
+    @SaCheckRole(value = ADMIN)
     @PostMapping("/upload")
-    @ApiOperation(value = "上传图片")
+    @ApiOperation(value = "上传图片(管理员使用)")
     public ResponseWrapper imageUpload(@RequestPart("file") MultipartFile upload) {
         ResponseWrapper responseWrapper;
         try {

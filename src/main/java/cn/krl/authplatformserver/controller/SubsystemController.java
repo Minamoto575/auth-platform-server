@@ -1,5 +1,7 @@
 package cn.krl.authplatformserver.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.SubsystemDTO;
@@ -26,7 +28,8 @@ import java.util.List;
 @Slf4j
 @Api(tags = "子系统记录的api")
 public class SubsystemController {
-
+    private final String ADMIN = "admin";
+    private final String USER = "user";
     @Autowired private ISubsystemService subsystemService;
     @Autowired private RegexUtil regexUtil;
 
@@ -36,8 +39,9 @@ public class SubsystemController {
      * @author kuang
      * @date: 2021/11/22
      */
+    @SaCheckRole(value = ADMIN)
     @PostMapping("/register")
-    @ApiOperation(value = "注册一条子系统记录")
+    @ApiOperation(value = "注册一条子系统记录(管理员使用)")
     @ResponseBody
     ResponseWrapper registerSubsystem(@RequestBody @Validated SubsystemRegisterDTO registerDTO) {
         ResponseWrapper responseWrapper;
@@ -52,14 +56,16 @@ public class SubsystemController {
         }
         return responseWrapper;
     }
+
     /**
      * @description: 更新一条子系统的记录
      * @param: updateDTO 需要提交的表单
      * @author kuang
      * @date: 2021/11/22
      */
+    @SaCheckRole(value = ADMIN)
     @PutMapping("/update")
-    @ApiOperation(value = "更新一条子系统记录")
+    @ApiOperation(value = "更新一条子系统记录(管理员使用)")
     @ResponseBody
     ResponseWrapper registerSubsystem(@RequestBody SubsystemUpdateDTO updateDTO) {
         ResponseWrapper responseWrapper;
@@ -99,8 +105,9 @@ public class SubsystemController {
      * @author kuang
      * @date: 2021/11/22
      */
+    @SaCheckRole(value = ADMIN)
     @DeleteMapping("/delete/id")
-    @ApiOperation(value = "通过id删除一条子系统记录")
+    @ApiOperation(value = "通过id删除一条子系统记录(管理员使用)")
     @ResponseBody
     ResponseWrapper deleteSubsystemById(@RequestParam Integer id) {
         subsystemService.removeById(id);
@@ -113,8 +120,9 @@ public class SubsystemController {
      * @author kuang
      * @date: 2021/11/22
      */
+    @SaCheckRole(value = ADMIN)
     @GetMapping("/list/id")
-    @ApiOperation(value = "通过id获得一条子系统记录")
+    @ApiOperation(value = "通过id获得一条子系统记录(管理员使用)")
     @ResponseBody
     ResponseWrapper listSubsystemById(@RequestParam Integer id) {
         ResponseWrapper responseWrapper;
@@ -133,6 +141,7 @@ public class SubsystemController {
      * @author kuang
      * @date: 2021/11/22
      */
+    @SaCheckRole(value = ADMIN)
     @GetMapping("/list/all")
     @ApiOperation(value = "获得所以子系统记录（包括禁用和过期的，管理员使用）")
     @ResponseBody
@@ -155,6 +164,9 @@ public class SubsystemController {
      * @author kuang
      * @date: 2021/11/22
      */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
     @GetMapping("/list/workable")
     @ApiOperation(value = "获得正在工作的子系统记录（不包括禁用和过期的，用户使用）")
     @ResponseBody

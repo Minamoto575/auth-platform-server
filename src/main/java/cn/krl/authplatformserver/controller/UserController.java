@@ -1,6 +1,8 @@
 package cn.krl.authplatformserver.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaCheckSafe;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
@@ -35,6 +37,8 @@ import java.util.List;
 @Slf4j
 @CrossOrigin
 public class UserController {
+    private final String ADMIN = "admin";
+    private final String USER = "user";
     @Autowired private IUserService userService;
     @Autowired private RegexUtil regexUtil;
     @Autowired private AliMessageUtil aliMessageUtil;
@@ -135,6 +139,9 @@ public class UserController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/16
      */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
     @GetMapping("/logout")
     @ApiOperation("用户退出")
     @ResponseBody
@@ -200,8 +207,9 @@ public class UserController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/14
      */
+    @SaCheckRole(value = ADMIN)
     @PutMapping("/update")
-    @ApiOperation("用户更新")
+    @ApiOperation("用户更新(管理员使用)")
     @ResponseBody
     public ResponseWrapper updateUser(@RequestBody @Validated UserUpdateDTO updateDTO) {
         Integer id = updateDTO.getId();
@@ -238,6 +246,9 @@ public class UserController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/14
      */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
     @PutMapping("/changePwd/oldPwd")
     @ApiOperation("用户更改密码(通过旧密码修改)")
     @ResponseBody
@@ -266,6 +277,9 @@ public class UserController {
      * @author kuang
      * @date: 2021/11/23
      */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
     @PutMapping("/changePwd/phone")
     @ApiOperation("用户更改密码(通过电话号码和验证码修改)")
     @ResponseBody
@@ -297,6 +311,9 @@ public class UserController {
      * @author kuang
      * @date: 2021/11/23
      */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
     @SaCheckSafe
     @PutMapping("/changePhone")
     @ApiOperation("用户更改电话")
@@ -334,6 +351,7 @@ public class UserController {
         return responseWrapper;
     }
 
+    @SaCheckRole(value = ADMIN)
     @DeleteMapping("/delete/id")
     @ApiOperation("删除用户")
     @ResponseBody
@@ -347,6 +365,7 @@ public class UserController {
         }
     }
 
+    @SaCheckRole(value = ADMIN)
     @GetMapping("/list/all")
     @ApiOperation("获取用户列表")
     @ResponseBody
@@ -365,6 +384,7 @@ public class UserController {
         return responseWrapper;
     }
 
+    @SaCheckRole(value = ADMIN)
     @GetMapping("/list/page")
     @ApiOperation("分页获取用户")
     @ResponseBody

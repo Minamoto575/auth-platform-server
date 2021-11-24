@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 @Api(tags = "验证码的api")
 @Slf4j
 public class VerifyCodeController {
+    private final String ADMIN = "admin";
+    private final String USER = "user";
     @Autowired private IVerifyCodeService verifyCodeService;
     @Autowired private IUserService userService;
     @Autowired private RegexUtil regexUtil;

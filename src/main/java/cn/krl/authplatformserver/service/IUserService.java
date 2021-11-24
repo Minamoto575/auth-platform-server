@@ -124,4 +124,12 @@ public interface IUserService extends IService<User> {
      * @date: 2021/11/23
      */
     void updateIp(String phone, String ip);
+
+    /**
+     * @description: 获取用户的角色列表
+     * @param: id 用户id
+     * @author kuang
+     * @date: 2021/11/24
+     */
+    List<String> getRoleList(int id);
 }

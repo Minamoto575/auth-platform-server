@@ -159,6 +159,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userMapper.updateById(user);
     }
 
+    @Override
+    public List<String> getRoleList(int id) {
+        User user = userMapper.selectById(id);
+        return user.getRoles();
+    }
+
     /**
      * @description: 封装成DTOList返回给前端
      * @param: users

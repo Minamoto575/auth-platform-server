@@ -23,7 +23,7 @@ import javax.validation.constraints.Pattern;
 public class UserRegisterDTO {
 
     @ApiModelProperty(value = "用户名")
-    @Length(min = 1, max = 10, message = "用户名长度为1-10个字符")
+    @Pattern(regexp = "^[a-zA-Z0-9_]{4,12}$", message = "用户名不合法")
     @NotBlank(message = "用户名不能为空")
     private String username;
 
@@ -33,7 +33,7 @@ public class UserRegisterDTO {
     private String phone;
 
     @ApiModelProperty(value = "统一登录密码")
-    @Length(min = 6, max = 30, message = "密码长度为6-30个字符")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z]).{8,20}$", message = "密码不合法")
     @NotBlank(message = "登录密码不能为空")
     private String password;
 

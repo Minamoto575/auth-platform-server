@@ -1,19 +1,24 @@
 package cn.krl.authplatformserver.model.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author kuang
  * @since 2021-11-11
  */
 @Data
+@TableName(autoResultMap = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "User对象", description = "统一登陆的用户实体类")
 public class User implements Serializable {
@@ -52,4 +57,8 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "最新的登录ip")
     private String lastIp;
+
+    @TableField(typeHandler = FastjsonTypeHandler.class)
+    @ApiModelProperty(value = "角色数组")
+    private List<String> roles;
 }

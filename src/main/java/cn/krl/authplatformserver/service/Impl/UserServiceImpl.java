@@ -1,5 +1,6 @@
 package cn.krl.authplatformserver.service.Impl;
 
+import cn.krl.authplatformserver.common.enums.Role;
 import cn.krl.authplatformserver.common.utils.SaltUtil;
 import cn.krl.authplatformserver.mapper.UserMapper;
 import cn.krl.authplatformserver.model.dto.UserDTO;
@@ -77,6 +78,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setGmtModified(System.currentTimeMillis());
         user.setDisabled(false);
         user.setExpired(false);
+        List<String> roles = new ArrayList<String>();
+        roles.add(Role.USER.getName());
+        user.setRoles(roles);
         userMapper.insert(user);
     }
 

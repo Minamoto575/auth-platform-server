@@ -219,7 +219,6 @@ public class UserController {
             log.warn("用户:" + updateDTO.getId() + "更新失败,错误的邮箱格式");
             return ResponseWrapper.markEmailError();
         }
-
         // 更新用户
         try {
             userService.updateUser(updateDTO);

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -36,11 +35,6 @@ public class UserRegisterDTO {
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-zA-Z]).{8,20}$", message = "密码不合法")
     @NotBlank(message = "登录密码不能为空")
     private String password;
-
-    @ApiModelProperty(value = "邮箱")
-    @NotBlank(message = "邮箱不能为空")
-    @Email
-    private String email;
 
     @ApiModelProperty(value = "短信验证码")
     @NotBlank(message = "短信验证码不能为空")

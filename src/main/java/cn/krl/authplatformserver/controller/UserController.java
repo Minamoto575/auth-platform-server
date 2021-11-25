@@ -165,21 +165,20 @@ public class UserController {
         ResponseWrapper responseWrapper;
         String messageCode = userRegisterDTO.getMessageCode();
         String phone = userRegisterDTO.getPhone();
-        String email = userRegisterDTO.getEmail();
 
-        // 短信验证码检查
-        boolean check = aliMessageUtil.checkMessageCode(messageCode, phone);
-        if (!check) {
-            return ResponseWrapper.markMessageCodeCheckError();
+        // 检查电话
+        if (!regexUtil.isLegalPhone(phone)) {
+            log.warn(phone + "电话格式错误");
+            return ResponseWrapper.markPhoneError();
         }
-
         if (userService.phoneExists(phone)) {
             log.warn(phone + "电话已被注册，注册失败！");
             return ResponseWrapper.markPhoneExist();
         }
-        if (userService.emailExists(email)) {
-            log.warn(email + "邮箱已被使用，注册失败！");
-            return ResponseWrapper.markEmailExist();
+        // 短信验证码检查
+        boolean check = aliMessageUtil.checkMessageCode(messageCode, phone);
+        if (!check) {
+            return ResponseWrapper.markMessageCodeCheckError();
         }
 
         // 注册

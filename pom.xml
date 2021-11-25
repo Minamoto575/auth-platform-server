@@ -184,6 +184,11 @@
             <artifactId>facebody20191230</artifactId>
             <version>1.0.11</version>
         </dependency>
+        <!--邮箱认证-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
 
     </dependencies>

@@ -132,4 +132,12 @@ public interface IUserService extends IService<User> {
      * @date: 2021/11/24
      */
     List<String> getRoleList(int id);
+    /**
+     * @description:修改邮箱
+     * @param: id 用户id
+     * @param: email 邮箱地址
+     * @author kuang
+     * @date: 2021/11/25
+     */
+    void changeEmail(Integer id, String email);
 }

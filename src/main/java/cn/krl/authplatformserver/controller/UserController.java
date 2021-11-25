@@ -11,6 +11,7 @@ import cn.krl.authplatformserver.common.utils.IpUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.po.User;
+import cn.krl.authplatformserver.service.IEmailService;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,7 @@ public class UserController {
     private final String ADMIN = "admin";
     private final String USER = "user";
     @Autowired private IUserService userService;
+    @Autowired private IEmailService emailService;
     @Autowired private RegexUtil regexUtil;
     @Autowired private AliMessageUtil aliMessageUtil;
     @Autowired private IpUtil ipUtil;
@@ -305,6 +307,49 @@ public class UserController {
         } catch (Exception e) {
             log.error("用户id：" + id + "修改新的电话：" + phone + "失败");
             responseWrapper = ResponseWrapper.markChangePhoneError();
+        }
+        return responseWrapper;
+    }
+
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
+    @PutMapping("/bindEmail")
+    @ApiOperation(value = "用户绑定邮箱")
+    @ResponseBody
+    public ResponseWrapper bindEmail(
+            @RequestParam Integer id,
+            @RequestParam String email,
+            @RequestParam String pwd,
+            @RequestParam String emailCode) {
+        ResponseWrapper responseWrapper;
+        if (!regexUtil.isLegalEmail(email)) {
+            log.error("邮箱格式错误");
+            return ResponseWrapper.markEmailError();
+        }
+        // 检查邮箱
+        if (userService.emailExists(email)) {
+            log.error("该邮箱已经被注册");
+            return ResponseWrapper.markEmailExist();
+        }
+        // 检查密码
+        if (!userService.loginCheckById(id, pwd)) {
+            log.error(id + "密码错误");
+            return ResponseWrapper.markAccountError();
+        }
+        // 检查验证码
+        boolean checkEmailCode = emailService.checkEmailCode(email, emailCode);
+        if (!checkEmailCode) {
+            log.error("验证码检查出错");
+            return ResponseWrapper.markEmailCodeCheckError();
+        }
+        try {
+            userService.changeEmail(id, email);
+            log.info("用户id：" + id + "成功修改新的邮箱：" + email);
+            responseWrapper = ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error("用户id：" + id + "修改新的邮箱：" + email + "失败");
+            responseWrapper = ResponseWrapper.markEmailBindError();
         }
         return responseWrapper;
     }

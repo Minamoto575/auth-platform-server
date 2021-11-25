@@ -165,6 +165,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return user.getRoles();
     }
 
+    @Override
+    public void changeEmail(Integer id, String email) {
+        User user = userMapper.selectById(id);
+        user.setEmail(email);
+        user.setGmtModified(System.currentTimeMillis());
+        userMapper.updateById(user);
+    }
+
     /**
      * @description: 封装成DTOList返回给前端
      * @param: users

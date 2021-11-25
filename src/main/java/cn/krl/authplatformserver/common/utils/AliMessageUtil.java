@@ -82,10 +82,10 @@ public class AliMessageUtil {
      *
      * @return
      */
-    public String getRandomCode(Integer code) {
+    public String getRandomCode(Integer length) {
         Random random = new Random();
         StringBuffer result = new StringBuffer();
-        for (int i = 0; i < code; i++) {
+        for (int i = 0; i < length; i++) {
             result.append(random.nextInt(10));
         }
         return result.toString();

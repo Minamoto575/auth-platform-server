@@ -336,6 +336,29 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.USER_NOT_FOUND_ERROR.getMsg());
         return responseWrapper;
     }
+    /**
+     * 邮箱验证码检查出错
+     *
+     * @return
+     */
+    public static ResponseWrapper markEmailCodeCheckError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.EMAILCODE_CHECK_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.EMAILCODE_CHECK_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 邮箱绑定失败
+     *
+     * @return
+     */
+    public static ResponseWrapper markEmailBindError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.EMAIL_BIND_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.EMAIL_BIND_ERROR.getMsg());
+        return responseWrapper;
+    }
 
     /**
      * 包装ResponseWrapper

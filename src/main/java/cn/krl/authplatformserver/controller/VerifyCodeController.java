@@ -5,6 +5,7 @@ import cn.krl.authplatformserver.common.utils.AliMessageUtil;
 import cn.krl.authplatformserver.common.utils.RedisUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.pojo.VerifyCode;
+import cn.krl.authplatformserver.service.IEmailService;
 import cn.krl.authplatformserver.service.IUserService;
 import cn.krl.authplatformserver.service.IVerifyCodeService;
 import io.swagger.annotations.Api;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 public class VerifyCodeController {
     @Autowired private IVerifyCodeService verifyCodeService;
     @Autowired private IUserService userService;
+    @Autowired private IEmailService emailService;
     @Autowired private RegexUtil regexUtil;
     @Autowired private AliMessageUtil messageUtil;
     @Autowired private RedisUtil redisUtil;
@@ -101,6 +103,35 @@ public class VerifyCodeController {
             }
         } catch (Exception e) {
             log.error(phone + "短信发送失败" + messageCode);
+            e.printStackTrace();
+            responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
+        }
+        return responseWrapper;
+    }
+
+    @ApiOperation(value = "邮箱验证码，用于邮箱绑定")
+    @GetMapping("/emailCode/get")
+    public ResponseWrapper sendEmailCode(@RequestParam String email) {
+        ResponseWrapper responseWrapper;
+        if (!regexUtil.isLegalEmail(email)) {
+            log.error(email + "错误的邮箱格式");
+            return ResponseWrapper.markEmailError();
+        }
+        if (userService.emailExists(email)) {
+            log.error(email + "已被注册");
+            return ResponseWrapper.markEmailExist();
+        }
+        String emailCode = emailService.getRandomCode(6);
+        String subject = "统讯统一认证中心邮箱绑定";
+        String content = "您的验证码是:" + emailCode + ",10分钟有效,此邮件为自动发送,请勿回复。";
+        try {
+            emailService.sendSimpleMail(email, subject, content);
+            log.info(email + "验证码发送成功" + emailCode);
+            String key = "EmailVerifyCode?email=" + email;
+            redisUtil.set(key, emailCode, 10 * 60);
+            responseWrapper = ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error(email + "短信发送失败" + emailCode);
             e.printStackTrace();
             responseWrapper = ResponseWrapper.markMessageCodeGenerateError();
         }

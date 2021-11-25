@@ -44,6 +44,8 @@ public enum ResponseCode {
     SUBSYSTEM_UPDATE_ERROR(420, "子系统记录更新失败"),
     SUBSYSTEM_NOT_FOUND_ERROR(421, "该子系统不存在"),
     USER_NOT_FOUND_ERROR(422, "该用户不存在"),
+    EMAILCODE_CHECK_ERROR(423, "邮箱验证码检查错误"),
+    EMAIL_BIND_ERROR(424, "邮箱绑定失败"),
     SYSTEM_ERROR(500, "系统异常"),
     /** 900以上，判定为前端同一处理的异常 */
     API_NOT_PER(900, "没有该接口的访问权限");

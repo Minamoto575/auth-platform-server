@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * @date: 2021/11/22
  */
 @Data
-@ApiModel(value = "子系统注册与更新的表单", description = "")
+@ApiModel(value = "子系统更新的表单", description = "")
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubsystemUpdateDTO {

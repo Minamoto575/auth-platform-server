@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("用户更新需要提交的表单")
+@ApiModel(value = "用户更新的表单")
 public class UserUpdateDTO {
 
     @ApiModelProperty(value = "用户ID")

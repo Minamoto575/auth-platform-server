@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("用户列表信息")
+@ApiModel(value = "用户展示的表单")
 public class UserDTO {
 
     @TableId(value = "id")

@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "子系统展示的表单", description = "")
+@ApiModel(value = "子系统注册的表单", description = "")
 public class SubsystemRegisterDTO {
 
     @ApiModelProperty(value = "子系统名称")

@@ -21,11 +21,10 @@ import java.util.UUID;
 @Slf4j
 @RequestMapping("/api/image")
 @CrossOrigin
-@Api(tags = "图片的api")
+@Api(tags = "图片管理")
 public class ImageController {
 
     private final String ADMIN = "admin";
-    private final String USER = "user";
     @Autowired private ImageUtil imageUtil;
 
     /**

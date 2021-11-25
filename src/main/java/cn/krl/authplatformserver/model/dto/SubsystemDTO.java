@@ -2,8 +2,10 @@ package cn.krl.authplatformserver.model.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /***
  * @description: 子系统传输对象
@@ -11,6 +13,8 @@ import lombok.EqualsAndHashCode;
  * @date: 2021/11/22
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "子系统展示的表单", description = "")
 public class SubsystemDTO {

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author kuang
- * @description 权限获取实现类
+ * @description 权限获取实现类 实现sa-token的接口接口 不需要注意底层细节
  * @date 2021/11/24 10:10
  */
 @Component // 保证此类被SpringBoot扫描，完成Sa-Token的自定义权限验证扩展

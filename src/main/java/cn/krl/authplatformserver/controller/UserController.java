@@ -7,12 +7,9 @@ import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.AliMessageUtil;
-import cn.krl.authplatformserver.common.utils.ImageCodeUtil;
 import cn.krl.authplatformserver.common.utils.IpUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
-import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
-import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
@@ -23,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 用户的前端控制器
@@ -33,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/user")
-@Api(tags = "用户的api")
+@Api(tags = "用户操作")
 @Slf4j
 @CrossOrigin
 public class UserController {
@@ -42,7 +38,6 @@ public class UserController {
     @Autowired private IUserService userService;
     @Autowired private RegexUtil regexUtil;
     @Autowired private AliMessageUtil aliMessageUtil;
-    @Autowired private ImageCodeUtil imageCodeUtil;
     @Autowired private IpUtil ipUtil;
 
     /**
@@ -51,7 +46,7 @@ public class UserController {
      * @date 2021/11/16
      */
     @GetMapping("/auth")
-    @ApiOperation("用户登录状态查询")
+    @ApiOperation(value = "用户登录状态查询")
     @ResponseBody
     public ResponseWrapper isLogin(@RequestParam String redirect) {
         ResponseWrapper responseWrapper;
@@ -78,7 +73,7 @@ public class UserController {
      * @date 2021/11/16
      */
     @GetMapping("/login")
-    @ApiOperation("用户登录")
+    @ApiOperation(value = "用户登录")
     @ResponseBody
     public ResponseWrapper login(
             HttpServletRequest request,
@@ -143,7 +138,7 @@ public class UserController {
             value = {ADMIN, USER},
             mode = SaMode.OR)
     @GetMapping("/logout")
-    @ApiOperation("用户退出")
+    @ApiOperation(value = "用户退出")
     @ResponseBody
     public ResponseWrapper logout(@RequestParam(required = false) String id) {
         if (regexUtil.isBlank(id)) {
@@ -161,7 +156,7 @@ public class UserController {
      * @date 2021/11/14
      */
     @PostMapping("/register")
-    @ApiOperation("用户注册")
+    @ApiOperation(value = "用户注册")
     @ResponseBody
     public ResponseWrapper registerUser(
             HttpServletRequest request, @RequestBody @Validated UserRegisterDTO userRegisterDTO) {
@@ -202,43 +197,6 @@ public class UserController {
     }
 
     /**
-     * @param updateDTO: 用户更新的数据表单 要求详情见UserUpdateDTO
-     * @description 用户更新方法，不做任何检验，开发给管理员
-     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @date 2021/11/14
-     */
-    @SaCheckRole(value = ADMIN)
-    @PutMapping("/update")
-    @ApiOperation("用户更新(管理员使用)")
-    @ResponseBody
-    public ResponseWrapper updateUser(@RequestBody @Validated UserUpdateDTO updateDTO) {
-        Integer id = updateDTO.getId();
-        String phone = updateDTO.getPhone();
-        String email = updateDTO.getEmail();
-        if (id == null || userService.getById(id) == null) {
-            log.error("不存在用户id=" + id);
-            return ResponseWrapper.markUserNotFoundError();
-        }
-        if (!regexUtil.isBlank(phone) && !regexUtil.isLegalPhone(phone)) {
-            log.warn("用户:" + updateDTO.getId() + "更新失败,错误的电话格式");
-            return ResponseWrapper.markPhoneError();
-        }
-        if (!regexUtil.isBlank(email) && !regexUtil.isLegalPhone(email)) {
-            log.warn("用户:" + updateDTO.getId() + "更新失败,错误的邮箱格式");
-            return ResponseWrapper.markEmailError();
-        }
-        // 更新用户
-        try {
-            userService.updateUser(updateDTO);
-            log.info("用户:" + updateDTO.getId() + "更新成功");
-            return ResponseWrapper.markSuccess();
-        } catch (Exception e) {
-            log.error("用户:" + updateDTO.getId() + "更新失败");
-            return ResponseWrapper.markUpdateUserError();
-        }
-    }
-
-    /**
      * @param phone: 电话号码 当作用户的账号
      * @param oldPwd: 验证旧密码
      * @param newPwd: 新密码
@@ -250,7 +208,7 @@ public class UserController {
             value = {ADMIN, USER},
             mode = SaMode.OR)
     @PutMapping("/changePwd/oldPwd")
-    @ApiOperation("用户更改密码(通过旧密码修改)")
+    @ApiOperation(value = "用户更改密码(通过旧密码修改)")
     @ResponseBody
     public ResponseWrapper changePwdByOldPwd(
             @RequestParam String phone, @RequestParam String oldPwd, @RequestParam String newPwd) {
@@ -281,7 +239,7 @@ public class UserController {
             value = {ADMIN, USER},
             mode = SaMode.OR)
     @PutMapping("/changePwd/phone")
-    @ApiOperation("用户更改密码(通过电话号码和验证码修改)")
+    @ApiOperation(value = "用户更改密码(通过电话号码和验证码修改)")
     @ResponseBody
     public ResponseWrapper changePwdByPhone(
             @RequestParam String phone,
@@ -316,7 +274,7 @@ public class UserController {
             mode = SaMode.OR)
     @SaCheckSafe
     @PutMapping("/changePhone")
-    @ApiOperation("用户更改电话")
+    @ApiOperation(value = "用户更改电话")
     @ResponseBody
     public ResponseWrapper changePhone(
             @RequestParam Integer id,
@@ -347,58 +305,6 @@ public class UserController {
         } catch (Exception e) {
             log.error("用户id：" + id + "修改新的电话：" + phone + "失败");
             responseWrapper = ResponseWrapper.markChangePhoneError();
-        }
-        return responseWrapper;
-    }
-
-    @SaCheckRole(value = ADMIN)
-    @DeleteMapping("/delete/id")
-    @ApiOperation("删除用户")
-    @ResponseBody
-    public ResponseWrapper deleteById(@RequestParam String id) {
-        if (userService.removeById(id)) {
-            log.info("删除用户成功，用户id:" + id);
-            return ResponseWrapper.markSuccess();
-        } else {
-            log.info("删除用户失败，用户id:" + id);
-            return ResponseWrapper.markError();
-        }
-    }
-
-    @SaCheckRole(value = ADMIN)
-    @GetMapping("/list/all")
-    @ApiOperation("获取用户列表")
-    @ResponseBody
-    public ResponseWrapper listAll() {
-        ResponseWrapper responseWrapper;
-        try {
-            List<UserDTO> users = userService.listAll();
-            responseWrapper = ResponseWrapper.markSuccess();
-            responseWrapper.setExtra("users", users);
-            log.info("查询所有用户成功");
-        } catch (Exception e) {
-            log.error("查询所有用户失败");
-            responseWrapper = ResponseWrapper.markError();
-            e.printStackTrace();
-        }
-        return responseWrapper;
-    }
-
-    @SaCheckRole(value = ADMIN)
-    @GetMapping("/list/page")
-    @ApiOperation("分页获取用户")
-    @ResponseBody
-    public ResponseWrapper listPage(@RequestParam int cur, @RequestParam int size) {
-        ResponseWrapper responseWrapper;
-        try {
-            List<UserDTO> users = userService.listPage(cur, size);
-            responseWrapper = ResponseWrapper.markSuccess();
-            responseWrapper.setExtra("users", users);
-            log.info("分页查询所有用户成功");
-        } catch (Exception e) {
-            log.error("分页查询所有用户失败");
-            responseWrapper = ResponseWrapper.markError();
-            e.printStackTrace();
         }
         return responseWrapper;
     }

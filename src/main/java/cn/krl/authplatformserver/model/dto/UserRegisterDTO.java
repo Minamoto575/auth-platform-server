@@ -19,7 +19,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("用户注册需要提交的表单")
+@ApiModel(value = "用户注册的表单")
 public class UserRegisterDTO {
 
     @ApiModelProperty(value = "用户名")

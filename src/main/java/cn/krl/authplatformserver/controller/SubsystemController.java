@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/subsystem")
 @Slf4j
-@Api(tags = "子系统记录的api")
+@Api(tags = "子系统管理")
 public class SubsystemController {
     private final String ADMIN = "admin";
     private final String USER = "user";

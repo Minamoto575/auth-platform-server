@@ -348,15 +348,45 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 邮箱绑定失败
-     *
-     * @return
-     */
     public static ResponseWrapper markEmailBindError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.EMAIL_BIND_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.EMAIL_BIND_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /**
+     * 用户名格式不合法
+     *
+     * @return
+     */
+    public static ResponseWrapper markUsernameIllegalError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.USERNAME_ILLEGAL_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.USERNAME_ILLEGAL_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 密码格式不合法
+     *
+     * @return
+     */
+    public static ResponseWrapper markPasswordIllegalError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.PASSWORD_ILLEGAL_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.PASSWORD_ILLEGAL_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
+     * 子系统名称为空
+     *
+     * @return
+     */
+    public static ResponseWrapper markSubsystemNameEmptyError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.SUBSYSTEM_NAME_EMPTY_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.SUBSYSTEM_NAME_EMPTY_ERROR.getMsg());
         return responseWrapper;
     }
 

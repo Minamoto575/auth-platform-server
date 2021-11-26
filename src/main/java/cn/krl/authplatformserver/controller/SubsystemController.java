@@ -70,13 +70,17 @@ public class SubsystemController {
     ResponseWrapper registerSubsystem(@RequestBody SubsystemUpdateDTO updateDTO) {
         ResponseWrapper responseWrapper;
         Integer id = updateDTO.getId();
+        String name = updateDTO.getName();
         String webUrl = updateDTO.getWebUrl();
         String iconUrl = updateDTO.getIconUrl();
         if (id == null || subsystemService.getById(id) == null) {
             log.error("没找到子系统记录，id=" + id);
             return ResponseWrapper.markSubsystemNotFoundError();
         }
-
+        if (name != null && name.isEmpty()) {
+            log.error("子系统名称不能为空");
+            return ResponseWrapper.markSubsystemNameEmptyError();
+        }
         // 要求改web和图片时 检查其url是否合法
         if (!regexUtil.isBlank(webUrl) && !regexUtil.isLegalUrl(webUrl)) {
             log.error("错误的网站url");

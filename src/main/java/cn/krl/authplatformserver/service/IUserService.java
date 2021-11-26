@@ -140,4 +140,13 @@ public interface IUserService extends IService<User> {
      * @date: 2021/11/25
      */
     void changeEmail(Integer id, String email);
+
+    /**
+     * @description: 用户修改用户名
+     * @param: id 用户id
+     * @param: name 新的用户名称
+     * @author kuang
+     * @date: 2021/11/26
+     */
+    void changeName(Integer id, String name);
 }

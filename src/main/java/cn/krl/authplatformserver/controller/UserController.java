@@ -214,9 +214,15 @@ public class UserController {
     public ResponseWrapper changePwdByOldPwd(
             @RequestParam String phone, @RequestParam String oldPwd, @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
+        // 验证旧密码
         if (!userService.loginCheckByPhone(phone, oldPwd)) {
             log.warn(phone + "旧密码验证失败");
             return ResponseWrapper.markAccountError();
+        }
+        // 检查新密码
+        if (!regexUtil.isLegalPassword(newPwd)) {
+            log.error("新密码格式不合法");
+            return ResponseWrapper.markPasswordIllegalError();
         }
         try {
             userService.changePwd(phone, newPwd);
@@ -248,6 +254,12 @@ public class UserController {
             @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
         boolean checkMessageCode = aliMessageUtil.checkMessageCode(messageCode, phone);
+        // 检查新密码
+        if (!regexUtil.isLegalPassword(newPwd)) {
+            log.error("新密码格式不合法");
+            return ResponseWrapper.markPasswordIllegalError();
+        }
+        // 检查验证码
         if (!checkMessageCode) {
             log.error("验证码检查出错");
             return ResponseWrapper.markMessageCodeCheckError();
@@ -349,6 +361,29 @@ public class UserController {
         } catch (Exception e) {
             log.error("用户id：" + id + "修改新的邮箱：" + email + "失败");
             responseWrapper = ResponseWrapper.markEmailBindError();
+        }
+        return responseWrapper;
+    }
+
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
+    @PutMapping("/changeName")
+    @ApiOperation(value = "用户修改用户名")
+    @ResponseBody
+    public ResponseWrapper changeName(@RequestParam Integer id, @RequestParam String name) {
+        // 检查输入的用户名
+        if (!regexUtil.isLegalUsername(name)) {
+            return ResponseWrapper.markUsernameIllegalError();
+        }
+        ResponseWrapper responseWrapper;
+        try {
+            userService.changeName(id, name);
+            responseWrapper = ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error("修改用户名失败");
+            e.printStackTrace();
+            responseWrapper = ResponseWrapper.markError();
         }
         return responseWrapper;
     }

@@ -1,6 +1,5 @@
 package cn.krl.authplatformserver.model.po;
 
-import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import io.swagger.annotations.ApiModel;
@@ -9,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,11 +43,11 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "注册时间")
     @TableField(fill = FieldFill.INSERT)
-    private DateTime gmtCreate;
+    private LocalDateTime gmtCreate;
 
     @ApiModelProperty(value = "最新修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private DateTime gmtModified;
+    private LocalDateTime gmtModified;
 
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;

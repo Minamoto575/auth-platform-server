@@ -1,6 +1,5 @@
 package cn.krl.authplatformserver.model.po;
 
-import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -11,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @author kuang
@@ -41,11 +41,11 @@ public class Subsystem implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
-    private DateTime gmtCreate;
+    private LocalDateTime gmtCreate;
 
     @ApiModelProperty(value = "最新的修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private DateTime gmtModified;
+    private LocalDateTime gmtModified;
 
     @ApiModelProperty(value = "禁用 （1禁用，0不禁用）")
     private Boolean disabled;

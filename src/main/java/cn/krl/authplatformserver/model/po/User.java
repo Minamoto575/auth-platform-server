@@ -49,6 +49,9 @@ public class User implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 
+    @ApiModelProperty(value = "最近登录时间")
+    private LocalDateTime gmtLogin;
+
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;
 

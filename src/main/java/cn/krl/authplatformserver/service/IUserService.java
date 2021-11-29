@@ -83,13 +83,13 @@ public interface IUserService extends IService<User> {
     void updateUser(UserUpdateDTO userUpdateDTO);
 
     /**
-     * @param phone: 电话号码
+     * @param id: 用户id
      * @param newPwd: 新密码
      * @description 修改密码
      * @return: void
      * @date 2021/11/12
      */
-    void changePwd(String phone, String newPwd);
+    void changePwd(Integer id, String newPwd);
 
     /**
      * @param id: 用户id
@@ -123,7 +123,7 @@ public interface IUserService extends IService<User> {
      * @author kuang
      * @date: 2021/11/23
      */
-    void updateIp(String phone, String ip);
+    void updateStatus(String phone, String ip);
 
     /**
      * @description: 获取用户的角色列表

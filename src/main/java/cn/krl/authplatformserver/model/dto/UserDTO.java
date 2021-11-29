@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,6 +39,9 @@ public class UserDTO {
 
     @ApiModelProperty(value = "最新修改时间")
     private DateTime gmtModified;
+
+    @ApiModelProperty(value = "最近登录时间")
+    private LocalDateTime gmtLogin;
 
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;

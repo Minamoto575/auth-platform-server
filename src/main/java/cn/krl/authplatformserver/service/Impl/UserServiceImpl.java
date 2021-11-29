@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,10 +114,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void changePwd(String phone, String newPwd) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("phone", phone);
-        User user = userMapper.selectOne(queryWrapper);
+    public void changePwd(Integer id, String newPwd) {
+        User user = userMapper.selectById(id);
         String salt = user.getSalt();
         String hashedPwd = hashPassword(newPwd, salt);
         user.setPassword(hashedPwd);
@@ -148,9 +147,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void updateIp(String phone, String ip) {
+    public void updateStatus(String phone, String ip) {
         User user = this.getUserByPhone(phone);
         user.setLastIp(ip);
+        user.setGmtLogin(LocalDateTime.now());
         userMapper.updateById(user);
     }
 

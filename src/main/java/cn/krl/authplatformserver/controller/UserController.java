@@ -113,8 +113,7 @@ public class UserController {
 
             // 更新最近登录的ip地址
             String ip = ipUtil.getIpAddress(request);
-            log.info("ip:" + ip);
-            userService.updateIp(phone, ip);
+            userService.updateStatus(phone, ip);
 
             // 封装携带的参数
             responseWrapper = ResponseWrapper.markSuccess();
@@ -162,7 +161,6 @@ public class UserController {
 
     /**
      * @description 用户退出
-     * @param id 用户id
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/16
      */
@@ -172,12 +170,8 @@ public class UserController {
     @GetMapping("/logout")
     @ApiOperation(value = "用户退出")
     @ResponseBody
-    public ResponseWrapper logout(@RequestParam(required = false) Integer id) {
-        if (id == null) {
-            StpUtil.logout(id);
-        } else {
-            StpUtil.logout();
-        }
+    public ResponseWrapper logout() {
+        StpUtil.logout();
         return ResponseWrapper.markSuccess();
     }
 
@@ -217,7 +211,7 @@ public class UserController {
             log.info(phone + "注册成功");
             // 更新最新登录的ip地址
             String ip = ipUtil.getIpAddress(request);
-            userService.updateIp(phone, ip);
+            userService.updateStatus(phone, ip);
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
             responseWrapper = ResponseWrapper.markRegisterError();
@@ -228,7 +222,6 @@ public class UserController {
     }
 
     /**
-     * @param phone: 电话号码 当作用户的账号
      * @param oldPwd: 验证旧密码
      * @param newPwd: 新密码
      * @description 用户更改密码的方法
@@ -242,11 +235,12 @@ public class UserController {
     @ApiOperation(value = "用户更改密码(通过旧密码修改)")
     @ResponseBody
     public ResponseWrapper changePwdByOldPwd(
-            @RequestParam String phone, @RequestParam String oldPwd, @RequestParam String newPwd) {
+            @RequestParam String oldPwd, @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
+        Integer id = Integer.parseInt(StpUtil.getLoginId().toString());
         // 验证旧密码
-        if (!userService.loginCheckByPhone(phone, oldPwd)) {
-            log.warn(phone + "旧密码验证失败");
+        if (!userService.loginCheckById(id, oldPwd)) {
+            log.warn(id + "旧密码验证失败");
             return ResponseWrapper.markAccountError();
         }
         // 检查新密码
@@ -255,10 +249,10 @@ public class UserController {
             return ResponseWrapper.markPasswordIllegalError();
         }
         try {
-            userService.changePwd(phone, newPwd);
+            userService.changePwd(id, newPwd);
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
-            log.error(phone + "更改密码失败");
+            log.error(id + "更改密码失败");
             responseWrapper = ResponseWrapper.markChangePwdError();
         }
         return responseWrapper;
@@ -279,10 +273,10 @@ public class UserController {
     @ApiOperation(value = "用户更改密码(通过电话号码和验证码修改)")
     @ResponseBody
     public ResponseWrapper changePwdByPhone(
-            @RequestParam String phone,
-            @RequestParam String messageCode,
-            @RequestParam String newPwd) {
+            @RequestParam String messageCode, @RequestParam String newPwd) {
         ResponseWrapper responseWrapper;
+        Integer id = Integer.parseInt(StpUtil.getLoginId().toString());
+        String phone = userService.getById(id).getPhone();
         boolean checkMessageCode = aliMessageUtil.checkMessageCode(messageCode, phone);
         // 检查新密码
         if (!regexUtil.isLegalPassword(newPwd)) {
@@ -295,10 +289,10 @@ public class UserController {
             return ResponseWrapper.markMessageCodeCheckError();
         }
         try {
-            userService.changePwd(phone, newPwd);
+            userService.changePwd(id, newPwd);
             responseWrapper = ResponseWrapper.markSuccess();
         } catch (Exception e) {
-            log.error(phone + "更改密码失败");
+            log.error(id + "更改密码失败");
             responseWrapper = ResponseWrapper.markChangePwdError();
         }
         return responseWrapper;
@@ -320,11 +314,11 @@ public class UserController {
     @ApiOperation(value = "用户更改电话")
     @ResponseBody
     public ResponseWrapper changePhone(
-            @RequestParam Integer id,
             @RequestParam String phone,
             @RequestParam String pwd,
             @RequestParam String messageCode) {
         ResponseWrapper responseWrapper;
+        Integer id = Integer.parseInt(StpUtil.getLoginId().toString());
         // 检查电话
         if (userService.phoneExists(phone)) {
             log.error("该电话已经被注册");
@@ -359,11 +353,9 @@ public class UserController {
     @ApiOperation(value = "用户绑定邮箱")
     @ResponseBody
     public ResponseWrapper bindEmail(
-            @RequestParam Integer id,
-            @RequestParam String email,
-            @RequestParam String pwd,
-            @RequestParam String emailCode) {
+            @RequestParam String email, @RequestParam String pwd, @RequestParam String emailCode) {
         ResponseWrapper responseWrapper;
+        Integer id = Integer.parseInt(StpUtil.getLoginId().toString());
         if (!regexUtil.isLegalEmail(email)) {
             log.error("邮箱格式错误");
             return ResponseWrapper.markEmailError();
@@ -401,7 +393,8 @@ public class UserController {
     @PutMapping("/changeName")
     @ApiOperation(value = "用户修改用户名")
     @ResponseBody
-    public ResponseWrapper changeName(@RequestParam Integer id, @RequestParam String name) {
+    public ResponseWrapper changeName(@RequestParam String name) {
+        Integer id = Integer.parseInt(StpUtil.getLoginId().toString());
         // 检查输入的用户名
         if (!regexUtil.isLegalUsername(name)) {
             return ResponseWrapper.markUsernameIllegalError();

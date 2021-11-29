@@ -78,6 +78,7 @@ public class UserManageController {
     @ApiOperation(value = "删除用户")
     @ResponseBody
     public ResponseWrapper deleteById(@RequestParam String id) {
+        // TODO 不能删除管理员
         if (userService.removeById(id)) {
             log.info("删除用户成功，用户id:" + id);
             return ResponseWrapper.markSuccess();

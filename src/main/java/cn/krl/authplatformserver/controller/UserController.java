@@ -9,6 +9,7 @@ import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.AliMessageUtil;
 import cn.krl.authplatformserver.common.utils.IpUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
+import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IEmailService;
@@ -16,6 +17,7 @@ import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -108,17 +110,21 @@ public class UserController {
         if (userService.loginCheckByPhone(phone, pwd)) {
             User user = userService.getUserByPhone(phone);
             StpUtil.login(user.getId());
-            // 封装携带的参数
-            responseWrapper = ResponseWrapper.markSuccess();
-            responseWrapper.setExtra("token", StpUtil.getTokenValue());
-            String ticket = SaSsoUtil.createTicket(user.getId());
-            responseWrapper.setExtra("ticket", ticket);
-            responseWrapper.setExtra("phone", phone);
-            responseWrapper.setExtra("uid", user.getId());
-            // 更新最新登录的ip地址
+
+            // 更新最近登录的ip地址
             String ip = ipUtil.getIpAddress(request);
             log.info("ip:" + ip);
             userService.updateIp(phone, ip);
+
+            // 封装携带的参数
+            responseWrapper = ResponseWrapper.markSuccess();
+            String ticket = SaSsoUtil.createTicket(user.getId());
+            responseWrapper.setExtra("token", StpUtil.getTokenValue());
+            responseWrapper.setExtra("ticket", ticket);
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+            userDTO.setLastIp(ip);
+            responseWrapper.setExtra("userInfo", userDTO);
 
             log.info(phone + "登录成功");
             return responseWrapper;

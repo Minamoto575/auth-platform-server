@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @author kuang
  * @description
@@ -34,7 +36,7 @@ public class UserDTO {
     private Long gmtCreate;
 
     @ApiModelProperty(value = "最新修改时间")
-    private Long gmtModifed;
+    private Long gmtModified;
 
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;
@@ -44,4 +46,7 @@ public class UserDTO {
 
     @ApiModelProperty(value = "最新的登录ip")
     private String lastIp;
+
+    @ApiModelProperty(value = "角色数组")
+    private List<String> roles;
 }

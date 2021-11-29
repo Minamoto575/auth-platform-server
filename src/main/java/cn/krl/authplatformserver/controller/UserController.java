@@ -18,7 +18,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,11 +37,24 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
     private final String ADMIN = "admin";
     private final String USER = "user";
-    @Autowired private IUserService userService;
-    @Autowired private IEmailService emailService;
-    @Autowired private RegexUtil regexUtil;
-    @Autowired private AliMessageUtil aliMessageUtil;
-    @Autowired private IpUtil ipUtil;
+    private final IUserService userService;
+    private final IEmailService emailService;
+    private final RegexUtil regexUtil;
+    private final AliMessageUtil aliMessageUtil;
+    private final IpUtil ipUtil;
+
+    public UserController(
+            IUserService userService,
+            IEmailService emailService,
+            RegexUtil regexUtil,
+            AliMessageUtil aliMessageUtil,
+            IpUtil ipUtil) {
+        this.userService = userService;
+        this.emailService = emailService;
+        this.regexUtil = regexUtil;
+        this.aliMessageUtil = aliMessageUtil;
+        this.ipUtil = ipUtil;
+    }
 
     /**
      * @description 判断用户是否已经登录
@@ -136,7 +148,7 @@ public class UserController {
     }
 
     /**
-     * @description:获取用户信息
+     * @description: 获取用户信息
      * @param: id 用户id
      * @author kuang
      * @date: 2021/11/29

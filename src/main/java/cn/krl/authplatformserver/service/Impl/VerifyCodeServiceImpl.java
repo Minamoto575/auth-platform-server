@@ -4,7 +4,6 @@ import cn.krl.authplatformserver.common.utils.ImageCodeUtil;
 import cn.krl.authplatformserver.model.pojo.VerifyCode;
 import cn.krl.authplatformserver.service.IVerifyCodeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -30,7 +29,11 @@ public class VerifyCodeServiceImpl implements IVerifyCodeService {
     /** @description 验证码的长度 */
     private final int VALICATE_CODE_LENGTH = 4;
 
-    @Autowired private ImageCodeUtil imageCodeUtil;
+    private final ImageCodeUtil imageCodeUtil;
+
+    public VerifyCodeServiceImpl(ImageCodeUtil imageCodeUtil) {
+        this.imageCodeUtil = imageCodeUtil;
+    }
 
     /**
      * 设置背景颜色及大小，干扰线

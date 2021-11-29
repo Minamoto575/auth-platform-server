@@ -10,7 +10,6 @@ import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +27,18 @@ import java.util.List;
 @CrossOrigin
 public class UserManageController {
     private final String ADMIN = "admin";
-    @Autowired private IUserService userService;
-    @Autowired private RegexUtil regexUtil;
+    private final IUserService userService;
+    private final RegexUtil regexUtil;
+
+    public UserManageController(IUserService userService, RegexUtil regexUtil) {
+        this.userService = userService;
+        this.regexUtil = regexUtil;
+    }
 
     /**
      * @param updateDTO: 用户更新的数据表单 要求详情见UserUpdateDTO
      * @description 用户更新方法，不做任何检验，开发给管理员
-     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
+     * @return: ResponseWrapper
      * @date 2021/11/14
      */
     @SaCheckRole(value = ADMIN)
@@ -79,7 +83,6 @@ public class UserManageController {
     @ApiOperation(value = "删除用户")
     @ResponseBody
     public ResponseWrapper deleteById(@RequestParam String id) {
-        // TODO 不能删除管理员
         User user = userService.getById(id);
         List<String> roles = user.getRoles();
         if (roles.contains(ADMIN)) {

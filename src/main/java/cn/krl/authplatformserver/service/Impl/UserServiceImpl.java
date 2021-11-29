@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -31,8 +30,13 @@ import java.util.List;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-    @Autowired private UserMapper userMapper;
-    @Autowired private SaltUtil saltUtil;
+    private final UserMapper userMapper;
+    private final SaltUtil saltUtil;
+
+    public UserServiceImpl(UserMapper userMapper, SaltUtil saltUtil) {
+        this.userMapper = userMapper;
+        this.saltUtil = saltUtil;
+    }
 
     @Override
     public boolean loginCheckByPhone(String phone, String password) {

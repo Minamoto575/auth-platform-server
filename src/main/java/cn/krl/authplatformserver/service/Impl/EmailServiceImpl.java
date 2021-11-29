@@ -3,7 +3,6 @@ package cn.krl.authplatformserver.service.Impl;
 import cn.krl.authplatformserver.common.utils.RedisUtil;
 import cn.krl.authplatformserver.service.IEmailService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,14 +23,16 @@ import java.util.Random;
 @Service
 public class EmailServiceImpl implements IEmailService {
 
+    private final JavaMailSender mailSender;
+    private final RedisUtil redisUtil;
+
     @Value("${spring.mail.username}")
     private String username;
 
-    @Autowired private JavaMailSender mailSender;
-    @Autowired private RedisUtil redisUtil;
-
-    public EmailServiceImpl() {
+    public EmailServiceImpl(JavaMailSender mailSender, RedisUtil redisUtil) {
         super();
+        this.mailSender = mailSender;
+        this.redisUtil = redisUtil;
     }
 
     /**

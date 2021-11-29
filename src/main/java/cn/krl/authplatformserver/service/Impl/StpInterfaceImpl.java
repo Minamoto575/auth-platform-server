@@ -2,7 +2,6 @@ package cn.krl.authplatformserver.service.Impl;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.krl.authplatformserver.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +14,11 @@ import java.util.List;
 @Component // 保证此类被SpringBoot扫描，完成Sa-Token的自定义权限验证扩展
 public class StpInterfaceImpl implements StpInterface {
 
-    @Autowired private IUserService userService;
+    private final IUserService userService;
+
+    public StpInterfaceImpl(IUserService userService) {
+        this.userService = userService;
+    }
 
     /** 返回一个账号所拥有的权限码集合 */
     @Override

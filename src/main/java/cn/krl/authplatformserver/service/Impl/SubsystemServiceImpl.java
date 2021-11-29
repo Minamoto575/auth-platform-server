@@ -9,7 +9,6 @@ import cn.krl.authplatformserver.service.ISubsystemService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +24,11 @@ import java.util.List;
 public class SubsystemServiceImpl extends ServiceImpl<SubsystemMapper, Subsystem>
         implements ISubsystemService {
 
-    @Autowired private SubsystemMapper subsystemMapper;
+    private final SubsystemMapper subsystemMapper;
+
+    public SubsystemServiceImpl(SubsystemMapper subsystemMapper) {
+        this.subsystemMapper = subsystemMapper;
+    }
 
     @Override
     public void register(SubsystemRegisterDTO registerDTO) {

@@ -11,7 +11,6 @@ import cn.krl.authplatformserver.service.IVerifyCodeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,12 +29,27 @@ import javax.servlet.http.HttpServletResponse;
 @Api(tags = "验证码操作")
 @Slf4j
 public class VerifyCodeController {
-    @Autowired private IVerifyCodeService verifyCodeService;
-    @Autowired private IUserService userService;
-    @Autowired private IEmailService emailService;
-    @Autowired private RegexUtil regexUtil;
-    @Autowired private AliMessageUtil messageUtil;
-    @Autowired private RedisUtil redisUtil;
+    private final IVerifyCodeService verifyCodeService;
+    private final IUserService userService;
+    private final IEmailService emailService;
+    private final RegexUtil regexUtil;
+    private final AliMessageUtil messageUtil;
+    private final RedisUtil redisUtil;
+
+    public VerifyCodeController(
+            IVerifyCodeService verifyCodeService,
+            IUserService userService,
+            IEmailService emailService,
+            RegexUtil regexUtil,
+            AliMessageUtil messageUtil,
+            RedisUtil redisUtil) {
+        this.verifyCodeService = verifyCodeService;
+        this.userService = userService;
+        this.emailService = emailService;
+        this.regexUtil = regexUtil;
+        this.messageUtil = messageUtil;
+        this.redisUtil = redisUtil;
+    }
 
     /**
      * @param request:

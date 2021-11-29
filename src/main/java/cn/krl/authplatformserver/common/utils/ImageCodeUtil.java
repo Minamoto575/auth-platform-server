@@ -1,7 +1,6 @@
 package cn.krl.authplatformserver.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -21,8 +20,12 @@ public class ImageCodeUtil extends org.apache.commons.lang3.RandomUtils {
         'U', 'V', 'W', 'X', 'Y', 'Z', '2', '3', '4', '5', '6', '7', '8', '9'
     };
     private final char[] NUMBER_ARRAY = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    @Autowired private RedisUtil redisUtil;
-    private Random random = new Random();
+    private final RedisUtil redisUtil;
+    private final Random random = new Random();
+
+    public ImageCodeUtil(RedisUtil redisUtil) {
+        this.redisUtil = redisUtil;
+    }
 
     public String randomString(int length) {
         StringBuilder sb = new StringBuilder();

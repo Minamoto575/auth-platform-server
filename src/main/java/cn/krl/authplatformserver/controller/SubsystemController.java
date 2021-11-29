@@ -11,7 +11,6 @@ import cn.krl.authplatformserver.service.ISubsystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +29,13 @@ import java.util.List;
 public class SubsystemController {
     private final String ADMIN = "admin";
     private final String USER = "user";
-    @Autowired private ISubsystemService subsystemService;
-    @Autowired private RegexUtil regexUtil;
+    private final ISubsystemService subsystemService;
+    private final RegexUtil regexUtil;
+
+    public SubsystemController(ISubsystemService subsystemService, RegexUtil regexUtil) {
+        this.subsystemService = subsystemService;
+        this.regexUtil = regexUtil;
+    }
 
     /**
      * @description: 注册一条子系统的记录
@@ -110,10 +114,10 @@ public class SubsystemController {
      * @date: 2021/11/22
      */
     @SaCheckRole(value = ADMIN)
-    @DeleteMapping("/delete/id")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "通过id删除一条子系统记录(管理员使用)")
     @ResponseBody
-    ResponseWrapper deleteSubsystemById(@RequestParam Integer id) {
+    ResponseWrapper deleteSubsystemById(@PathVariable("id") Integer id) {
         subsystemService.removeById(id);
         return ResponseWrapper.markSuccess();
     }
@@ -125,10 +129,10 @@ public class SubsystemController {
      * @date: 2021/11/22
      */
     @SaCheckRole(value = ADMIN)
-    @GetMapping("/list/id")
+    @GetMapping("/list/{id}")
     @ApiOperation(value = "通过id获得一条子系统记录(管理员使用)")
     @ResponseBody
-    ResponseWrapper listSubsystemById(@RequestParam Integer id) {
+    ResponseWrapper listSubsystemById(@PathVariable("id") Integer id) {
         ResponseWrapper responseWrapper;
         if (subsystemService.getById(id) == null) {
             log.error("没找到id=" + id + "的子系统记录");

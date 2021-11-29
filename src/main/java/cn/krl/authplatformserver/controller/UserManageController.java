@@ -5,6 +5,7 @@ import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
+import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -79,8 +80,13 @@ public class UserManageController {
     @ResponseBody
     public ResponseWrapper deleteById(@RequestParam String id) {
         // TODO 不能删除管理员
+        User user = userService.getById(id);
+        List<String> roles = user.getRoles();
+        if (roles.contains(ADMIN)) {
+            log.error(id + "是管理员,不能删除");
+            return ResponseWrapper.markDeleteAdminError();
+        }
         if (userService.removeById(id)) {
-            log.info("删除用户成功，用户id:" + id);
             return ResponseWrapper.markSuccess();
         } else {
             log.info("删除用户失败，用户id:" + id);

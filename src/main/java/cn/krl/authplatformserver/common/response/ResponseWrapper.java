@@ -391,6 +391,18 @@ public class ResponseWrapper {
     }
 
     /**
+     * 子系统名称为空
+     *
+     * @return
+     */
+    public static ResponseWrapper markDeleteAdminError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.DELETE_ADMIN_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.DELETE_ADMIN_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /**
      * 包装ResponseWrapper
      *
      * @param tag Tag名称

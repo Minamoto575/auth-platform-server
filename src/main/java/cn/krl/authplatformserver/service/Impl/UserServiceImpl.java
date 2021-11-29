@@ -181,6 +181,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userMapper.updateById(user);
     }
 
+    @Override
+    public UserDTO getInfo(Integer id) {
+        User user = userMapper.selectById(id);
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(user, userDTO);
+        return userDTO;
+    }
+
+    @Override
+    public boolean userExists(Integer id) {
+        User user = userMapper.selectById(id);
+        return user != null;
+    }
+
     /**
      * @description: 封装成DTOList返回给前端
      * @param: users

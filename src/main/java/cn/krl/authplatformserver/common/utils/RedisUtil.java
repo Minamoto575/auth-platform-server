@@ -19,7 +19,11 @@ public class RedisUtil {
 
     @Resource private RedisTemplate<String, Object> redisTemplate;
 
-    // 不使用 JdkSerializationRedisSerializer 来做序列化 防止redis出现乱码
+    /**
+     * @description: 不使用 JdkSerializationRedisSerializer 来做序列化 防止redis出现乱码
+     * @author kuang
+     * @date: 2021/11/29
+     */
     @Autowired(required = false)
     public void setRedisTemplate(RedisTemplate redisTemplate) {
         RedisSerializer stringSerializer = new StringRedisSerializer();

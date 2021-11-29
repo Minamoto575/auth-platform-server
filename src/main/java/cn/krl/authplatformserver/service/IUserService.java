@@ -149,4 +149,20 @@ public interface IUserService extends IService<User> {
      * @date: 2021/11/26
      */
     void changeName(Integer id, String name);
+
+    /**
+     * @description: 获取用户信息
+     * @param: id 用户id
+     * @author kuang
+     * @date: 2021/11/29
+     */
+    UserDTO getInfo(Integer id);
+
+    /**
+     * @description: 判断当前用户是否存在
+     * @param: id 用户id
+     * @author kuang
+     * @date: 2021/11/29
+     */
+    boolean userExists(Integer id);
 }

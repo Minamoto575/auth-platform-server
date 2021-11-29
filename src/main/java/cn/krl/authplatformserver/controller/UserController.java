@@ -137,6 +137,30 @@ public class UserController {
     }
 
     /**
+     * @description:获取用户信息
+     * @param: id 用户id
+     * @author kuang
+     * @date: 2021/11/29
+     */
+    @GetMapping("/info")
+    @ApiOperation(value = "获取用户信息")
+    @ResponseBody
+    public ResponseWrapper info() {
+        ResponseWrapper responseWrapper;
+        Integer id = Integer.parseInt(StpUtil.getLoginId().toString());
+        if (!userService.userExists(id)) {
+            log.error("用户不存在");
+            return ResponseWrapper.markUserNotFoundError();
+        }
+
+        // 封装携带的参数
+        UserDTO userInfo = userService.getInfo(id);
+        responseWrapper = ResponseWrapper.markSuccess();
+        responseWrapper.setExtra("userInfo", userInfo);
+        return responseWrapper;
+    }
+
+    /**
      * @description 用户退出
      * @param id 用户id
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
@@ -148,8 +172,8 @@ public class UserController {
     @GetMapping("/logout")
     @ApiOperation(value = "用户退出")
     @ResponseBody
-    public ResponseWrapper logout(@RequestParam(required = false) String id) {
-        if (regexUtil.isBlank(id)) {
+    public ResponseWrapper logout(@RequestParam(required = false) Integer id) {
+        if (id == null) {
             StpUtil.logout(id);
         } else {
             StpUtil.logout();

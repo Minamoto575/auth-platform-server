@@ -79,10 +79,10 @@ public class UserManageController {
      * @date: 2021/11/25
      */
     @SaCheckRole(value = ADMIN)
-    @DeleteMapping("/delete/id")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "删除用户")
     @ResponseBody
-    public ResponseWrapper deleteById(@RequestParam String id) {
+    public ResponseWrapper deleteById(@PathVariable("id") String id) {
         User user = userService.getById(id);
         List<String> roles = user.getRoles();
         if (roles.contains(ADMIN)) {

@@ -149,7 +149,6 @@ public class UserController {
 
     /**
      * @description: 获取用户信息
-     * @param: id 用户id
      * @author kuang
      * @date: 2021/11/29
      */
@@ -311,7 +310,7 @@ public class UserController {
     }
 
     /**
-     * @description:用户更改绑定的电话号码
+     * @description: 用户更改绑定的电话号码
      * @param: id 用户id
      * @param: phone 新电话
      * @param: messageCode 短信验证码
@@ -358,6 +357,14 @@ public class UserController {
         return responseWrapper;
     }
 
+    /**
+     * @description: 绑定邮箱
+     * @param: email
+     * @param: pwd
+     * @param: emailCode
+     * @author kuang
+     * @date: 2021/11/29
+     */
     @SaCheckRole(
             value = {ADMIN, USER},
             mode = SaMode.OR)
@@ -399,6 +406,12 @@ public class UserController {
         return responseWrapper;
     }
 
+    /**
+     * @description: 修改用户名
+     * @param: name
+     * @author kuang
+     * @date: 2021/11/29
+     */
     @SaCheckRole(
             value = {ADMIN, USER},
             mode = SaMode.OR)

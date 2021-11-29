@@ -123,6 +123,12 @@ public class VerifyCodeController {
         return responseWrapper;
     }
 
+    /**
+     * @description: 发送邮箱验证码
+     * @param: email
+     * @author kuang
+     * @date: 2021/11/29
+     */
     @ApiOperation(value = "邮箱验证码，用于邮箱绑定")
     @GetMapping("/emailCode/get")
     public ResponseWrapper sendEmailCode(@RequestParam String email) {

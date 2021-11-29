@@ -1,6 +1,9 @@
 package cn.krl.authplatformserver.model.po;
 
+import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,10 +40,12 @@ public class Subsystem implements Serializable {
     private String iconUrl;
 
     @ApiModelProperty(value = "创建时间")
-    private Long gmtCreate;
+    @TableField(fill = FieldFill.INSERT)
+    private DateTime gmtCreate;
 
     @ApiModelProperty(value = "最新的修改时间")
-    private Long gmtModified;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private DateTime gmtModified;
 
     @ApiModelProperty(value = "禁用 （1禁用，0不禁用）")
     private Boolean disabled;

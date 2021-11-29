@@ -74,8 +74,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setSalt(salt);
         String hashedPwd = hashPassword(userRegisterDTO.getPassword(), salt);
         user.setPassword(hashedPwd);
-        user.setGmtCreate(System.currentTimeMillis());
-        user.setGmtModified(System.currentTimeMillis());
         user.setDisabled(false);
         user.setExpired(false);
         List<String> roles = new ArrayList<String>();
@@ -110,7 +108,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         BeanUtils.copyProperties(userUpdateDTO, user);
         user.setPassword(hashedPwd);
-        user.setGmtModified(System.currentTimeMillis());
 
         userMapper.updateById(user);
     }
@@ -123,7 +120,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String salt = user.getSalt();
         String hashedPwd = hashPassword(newPwd, salt);
         user.setPassword(hashedPwd);
-        user.setGmtModified(System.currentTimeMillis());
         userMapper.updateById(user);
     }
 
@@ -131,7 +127,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void changePhone(Integer id, String phone) {
         User user = userMapper.selectById(id);
         user.setPhone(phone);
-        user.setGmtModified(System.currentTimeMillis());
         userMapper.updateById(user);
     }
 
@@ -169,7 +164,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void changeEmail(Integer id, String email) {
         User user = userMapper.selectById(id);
         user.setEmail(email);
-        user.setGmtModified(System.currentTimeMillis());
         userMapper.updateById(user);
     }
 
@@ -177,7 +171,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void changeName(Integer id, String name) {
         User user = userMapper.selectById(id);
         user.setUsername(name);
-        user.setGmtModified(System.currentTimeMillis());
         userMapper.updateById(user);
     }
 

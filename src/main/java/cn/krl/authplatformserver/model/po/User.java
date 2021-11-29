@@ -1,9 +1,7 @@
 package cn.krl.authplatformserver.model.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -44,10 +42,12 @@ public class User implements Serializable {
     private String salt;
 
     @ApiModelProperty(value = "注册时间")
-    private Long gmtCreate;
+    @TableField(fill = FieldFill.INSERT)
+    private DateTime gmtCreate;
 
     @ApiModelProperty(value = "最新修改时间")
-    private Long gmtModified;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private DateTime gmtModified;
 
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;

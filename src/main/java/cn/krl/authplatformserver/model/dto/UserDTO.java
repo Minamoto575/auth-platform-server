@@ -1,5 +1,6 @@
 package cn.krl.authplatformserver.model.dto;
 
+import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,10 +34,10 @@ public class UserDTO {
     private Boolean expired;
 
     @ApiModelProperty(value = "注册时间")
-    private Long gmtCreate;
+    private DateTime gmtCreate;
 
     @ApiModelProperty(value = "最新修改时间")
-    private Long gmtModified;
+    private DateTime gmtModified;
 
     @ApiModelProperty(value = "禁用")
     private Boolean disabled;

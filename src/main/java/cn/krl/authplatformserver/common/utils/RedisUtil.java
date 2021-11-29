@@ -5,7 +5,10 @@ package cn.krl.authplatformserver.common.utils;
  * @description redis工具类
  * @date 2021/11/11 13:19
  */
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -16,6 +19,16 @@ public class RedisUtil {
 
     @Resource private RedisTemplate<String, Object> redisTemplate;
 
+    // 不使用 JdkSerializationRedisSerializer 来做序列化 防止redis出现乱码
+    @Autowired(required = false)
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        RedisSerializer stringSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringSerializer);
+        redisTemplate.setValueSerializer(stringSerializer);
+        redisTemplate.setHashKeySerializer(stringSerializer);
+        redisTemplate.setHashValueSerializer(stringSerializer);
+        this.redisTemplate = redisTemplate;
+    }
     /**
      * 设置键值
      *

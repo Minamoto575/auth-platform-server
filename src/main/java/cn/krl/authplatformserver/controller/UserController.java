@@ -9,10 +9,13 @@ import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.AliMessageUtil;
 import cn.krl.authplatformserver.common.utils.IpUtil;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
+import cn.krl.authplatformserver.model.dto.LoginRecordDTO;
+import cn.krl.authplatformserver.model.dto.LoginRecordPageDTO;
 import cn.krl.authplatformserver.model.dto.UserDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IEmailService;
+import cn.krl.authplatformserver.service.ILoginRecordService;
 import cn.krl.authplatformserver.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户的前端控制器
@@ -42,15 +46,18 @@ public class UserController {
     private final RegexUtil regexUtil;
     private final AliMessageUtil aliMessageUtil;
     private final IpUtil ipUtil;
+    private final ILoginRecordService loginRecordService;
 
     public UserController(
             IUserService userService,
             IEmailService emailService,
+            ILoginRecordService loginRecordService,
             RegexUtil regexUtil,
             AliMessageUtil aliMessageUtil,
             IpUtil ipUtil) {
         this.userService = userService;
         this.emailService = emailService;
+        this.loginRecordService = loginRecordService;
         this.regexUtil = regexUtil;
         this.aliMessageUtil = aliMessageUtil;
         this.ipUtil = ipUtil;
@@ -126,6 +133,9 @@ public class UserController {
             // 更新最近登录的ip地址
             String ip = ipUtil.getIpAddress(request);
             userService.updateStatus(phone, ip);
+
+            // 插入登录记录
+            loginRecordService.insert(user.getId(), ip);
 
             // 封装携带的参数
             responseWrapper = ResponseWrapper.markSuccess();
@@ -433,6 +443,48 @@ public class UserController {
             e.printStackTrace();
             responseWrapper = ResponseWrapper.markError();
         }
+        return responseWrapper;
+    }
+
+    /**
+     * @description: 获取当前登录用户的登录记录
+     * @author kuang
+     * @date: 2021/11/30
+     */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
+    @GetMapping("/loginRecord")
+    @ApiOperation(value = "获取当前登录用户的登录记录")
+    @ResponseBody
+    public ResponseWrapper listLoginRecord() {
+        ResponseWrapper responseWrapper;
+        Integer uid = Integer.parseInt(StpUtil.getLoginId().toString());
+        List<LoginRecordDTO> records = loginRecordService.listAllByUid(uid);
+        responseWrapper = ResponseWrapper.markSuccess();
+        responseWrapper.setExtra("loginRecords", records);
+        return responseWrapper;
+    }
+
+    /**
+     * @description: 分页获取当前登录用户的登录记录
+     * @param: cur
+     * @param: size
+     * @author kuang
+     * @date: 2021/11/30
+     */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
+    @GetMapping("/loginRecord/page")
+    @ApiOperation(value = "分页获取当前登录用户的登录记录")
+    @ResponseBody
+    public ResponseWrapper listLoginRecord(@RequestParam Integer cur, @RequestParam Integer size) {
+        ResponseWrapper responseWrapper;
+        Integer uid = Integer.parseInt(StpUtil.getLoginId().toString());
+        LoginRecordPageDTO loginRecordPageDTO = loginRecordService.listPageByUid(uid, cur, size);
+        responseWrapper = ResponseWrapper.markSuccess();
+        responseWrapper.setExtra("page", loginRecordPageDTO);
         return responseWrapper;
     }
 }

@@ -51,7 +51,7 @@ public class CodeGenerator {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // 对那一张表生成代码
-        strategy.setInclude("user", "subsystem");
+        strategy.setInclude("user", "subsystem", "login_record");
         // 数据库表映射到实体的命名策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 数据库表字段映射到实体的命名策略

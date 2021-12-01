@@ -4,6 +4,7 @@ import cn.krl.authplatformserver.common.enums.Role;
 import cn.krl.authplatformserver.common.utils.SaltUtil;
 import cn.krl.authplatformserver.mapper.UserMapper;
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserPageDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
@@ -40,7 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean loginCheckByPhone(String phone, String password) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", phone);
         User user = userMapper.selectOne(queryWrapper);
         String hashedPwd = hashPassword(password, user.getSalt());
@@ -49,7 +50,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean loginCheckById(Integer id, String password) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         User user = userMapper.selectOne(queryWrapper);
         String hashedPwd = hashPassword(password, user.getSalt());
@@ -60,13 +61,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public String hashPassword(String password, String salt) {
         String pwdStr = DigestUtils.md5DigestAsHex(password.getBytes());
         String mixedStr = pwdStr + salt;
-        String hashedPwd = DigestUtils.md5DigestAsHex(mixedStr.getBytes());
-        return hashedPwd;
+        return DigestUtils.md5DigestAsHex(mixedStr.getBytes());
     }
 
     @Override
     public User getUserByPhone(String phone) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", phone);
         return userMapper.selectOne(queryWrapper);
     }
@@ -81,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPassword(hashedPwd);
         user.setDisabled(false);
         user.setExpired(false);
-        List<String> roles = new ArrayList<String>();
+        List<String> roles = new ArrayList<>();
         roles.add(Role.USER.getName());
         user.setRoles(roles);
         userMapper.insert(user);
@@ -89,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean phoneExists(String phone) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("phone", phone);
         List<User> users = userMapper.selectList(queryWrapper);
         return !users.isEmpty();
@@ -97,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean emailExists(String email) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email", email);
         List<User> users = userMapper.selectList(queryWrapper);
         return !users.isEmpty();
@@ -135,19 +135,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public List<UserDTO> listAll() {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         List<User> users = userMapper.selectList(queryWrapper);
         return users2UserDTOs(users);
     }
 
     @Override
-    public List<UserDTO> listPage(int cur, int size) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        Page page = new Page();
-        page.setCurrent(cur);
-        page.setSize(size);
-        List<User> users = userMapper.selectPage(page, queryWrapper).getRecords();
-        return users2UserDTOs(users);
+    public UserPageDTO listPage(int cur, int size) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        Page<User> page = new Page<>(cur, size);
+        UserPageDTO userPageDTO = new UserPageDTO();
+        userMapper.selectPage(page, queryWrapper);
+        userPageDTO.setCur(cur);
+        userPageDTO.setSize(size);
+        userPageDTO.setTotal(Math.toIntExact(page.getTotal()));
+        userPageDTO.setUsers(users2UserDTOs(page.getRecords()));
+        return userPageDTO;
     }
 
     @Override

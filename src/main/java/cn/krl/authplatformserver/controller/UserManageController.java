@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserPageDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
@@ -135,7 +136,7 @@ public class UserManageController {
     public ResponseWrapper listPage(@RequestParam int cur, @RequestParam int size) {
         ResponseWrapper responseWrapper;
         try {
-            List<UserDTO> users = userService.listPage(cur, size);
+            UserPageDTO users = userService.listPage(cur, size);
             responseWrapper = ResponseWrapper.markSuccess();
             responseWrapper.setExtra("users", users);
             log.info("分页查询所有用户成功");

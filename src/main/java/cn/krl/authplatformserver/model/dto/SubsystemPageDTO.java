@@ -10,14 +10,14 @@ import java.util.List;
 
 /**
  * @author kuang
- * @description 分页传输对象
- * @date 2021/11/30 9:36
+ * @description 子系统分页传输对象 考虑到子系统数量不会很多 暂时不用
+ * @date 2021/11/30 11:39
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "登录记录分页展示的表单", description = "")
-public class LoginRecordPageDTO {
+@ApiModel(value = "子系统分页展示的表单", description = "")
+public class SubsystemPageDTO {
     @ApiModelProperty(value = "总数")
     private Integer total;
 
@@ -27,6 +27,6 @@ public class LoginRecordPageDTO {
     @ApiModelProperty(value = "页的大小")
     private Integer size;
 
-    @ApiModelProperty(value = "登录记录")
-    private List<LoginRecordDTO> loginRecords;
+    @ApiModelProperty(value = "子系统记录")
+    private List<SubsystemDTO> subsystems;
 }

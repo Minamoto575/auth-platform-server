@@ -46,11 +46,10 @@ public class LoginRecordServiceImpl extends ServiceImpl<LoginRecordMapper, Login
         queryWrapper.eq("uid", uid);
         List<LoginRecord> loginRecords = loginRecordMapper.selectList(queryWrapper);
         if (loginRecords != null) {
-
             return toDTOList(loginRecords);
         }
         log.warn(uid + "不存在登录记录");
-        return new ArrayList<LoginRecordDTO>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -69,7 +68,7 @@ public class LoginRecordServiceImpl extends ServiceImpl<LoginRecordMapper, Login
         if (loginRecords == null) {
             log.warn(uid + "不存在登录记录" + "cur:" + cur + "size:" + size);
         } else {
-            loginRecordPageDTO.setData(toDTOList(loginRecords));
+            loginRecordPageDTO.setLoginRecords(toDTOList(loginRecords));
         }
         return loginRecordPageDTO;
     }
@@ -82,14 +81,14 @@ public class LoginRecordServiceImpl extends ServiceImpl<LoginRecordMapper, Login
             return toDTOList(loginRecords);
         }
         log.warn("不存在登录记录");
-        return new ArrayList<LoginRecordDTO>();
+        return new ArrayList<>();
     }
 
     @Override
     public LoginRecordPageDTO listPage(Integer cur, Integer size) {
         // 查询
         Page<LoginRecord> page = new Page<>(cur, size);
-        loginRecordMapper.selectPage(page, new QueryWrapper<LoginRecord>());
+        loginRecordMapper.selectPage(page, new QueryWrapper<>());
 
         // 封装返回对象
         LoginRecordPageDTO loginRecordPageDTO = new LoginRecordPageDTO();
@@ -100,7 +99,7 @@ public class LoginRecordServiceImpl extends ServiceImpl<LoginRecordMapper, Login
         if (loginRecords == null) {
             log.warn("不存在登录记录" + "cur:" + cur + "size:" + size);
         } else {
-            loginRecordPageDTO.setData(toDTOList(loginRecords));
+            loginRecordPageDTO.setLoginRecords(toDTOList(loginRecords));
         }
         return loginRecordPageDTO;
     }
@@ -112,7 +111,7 @@ public class LoginRecordServiceImpl extends ServiceImpl<LoginRecordMapper, Login
      * @date: 2021/11/30
      */
     public List<LoginRecordDTO> toDTOList(List<LoginRecord> records) {
-        List<LoginRecordDTO> loginRecordDTOs = new ArrayList<LoginRecordDTO>();
+        List<LoginRecordDTO> loginRecordDTOs = new ArrayList<>();
         for (LoginRecord record : records) {
             LoginRecordDTO loginRecordDTO = new LoginRecordDTO();
             BeanUtils.copyProperties(record, loginRecordDTO);

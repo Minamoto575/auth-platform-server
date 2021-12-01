@@ -55,14 +55,14 @@ public class SubsystemServiceImpl extends ServiceImpl<SubsystemMapper, Subsystem
 
     @Override
     public List<SubsystemDTO> listAll() {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Subsystem> queryWrapper = new QueryWrapper<>();
         List<Subsystem> subsystems = subsystemMapper.selectList(queryWrapper);
         return toDTOList(subsystems);
     }
 
     @Override
     public List<SubsystemDTO> listWorkable() {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Subsystem> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("disabled", false);
         queryWrapper.eq("expired", false);
         List<Subsystem> subsystems = subsystemMapper.selectList(queryWrapper);

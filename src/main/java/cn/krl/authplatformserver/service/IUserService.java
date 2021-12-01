@@ -1,6 +1,7 @@
 package cn.krl.authplatformserver.service;
 
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserPageDTO;
 import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
@@ -114,10 +115,10 @@ public interface IUserService extends IService<User> {
      * @return: java.util.List<cn.krl.authplatformserver.model.dto.UserDTO>
      * @date 2021/11/18
      */
-    List<UserDTO> listPage(int cur, int size);
+    UserPageDTO listPage(int cur, int size);
 
     /**
-     * @description: 更新用户登录的最新ip地址
+     * @description: 更新用户登录相关的信息 ip、时间等
      * @param: phone 电话
      * @param: ip ip地址
      * @author kuang
@@ -133,7 +134,7 @@ public interface IUserService extends IService<User> {
      */
     List<String> getRoleList(int id);
     /**
-     * @description:修改邮箱
+     * @description: 修改邮箱
      * @param: id 用户id
      * @param: email 邮箱地址
      * @author kuang

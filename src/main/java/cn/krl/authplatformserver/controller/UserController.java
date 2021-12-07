@@ -152,8 +152,8 @@ public class UserController {
             userDTO.setLastIp(ip);
             responseWrapper.setExtra("userInfo", userDTO);
 
-            // 用户信息存入redis
-            StpUtil.getSession().set("userInfo", userDTO);
+            // 用户电话存入redis
+            StpUtil.getSession().set("phone", phone);
             log.info(phone + "登录成功");
             return responseWrapper;
         } else {

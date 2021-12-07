@@ -68,21 +68,27 @@ public class UserController {
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/16
      */
+    @CrossOrigin
     @GetMapping("/auth")
     @ApiOperation(value = "用户登录状态查询")
     @ResponseBody
     public ResponseWrapper isLogin(@RequestParam String redirect) {
         ResponseWrapper responseWrapper;
+        String ticket = null;
         if (!regexUtil.isLegalUrl(redirect)) {
             log.error("无效的URL格式");
             return ResponseWrapper.markUrlError();
         }
         if (StpUtil.isLogin()) {
             log.info("用户登录状态查询：用户已成功登录");
+            ticket = SaSsoUtil.createTicket(StpUtil.getLoginId());
             responseWrapper = ResponseWrapper.markRedirect();
         } else {
             log.info("用户登录状态查询：用户未登录");
             responseWrapper = ResponseWrapper.markNOTLOGINError();
+        }
+        if (ticket != null) {
+            redirect = redirect + "?ticket=" + ticket;
         }
         responseWrapper.setExtra("redirect", redirect);
         return responseWrapper;
@@ -129,7 +135,6 @@ public class UserController {
         if (userService.loginCheckByPhone(phone, pwd)) {
             User user = userService.getUserByPhone(phone);
             StpUtil.login(user.getId());
-
             // 更新最近登录的ip地址
             String ip = ipUtil.getIpAddress(request);
             userService.updateStatus(phone, ip);
@@ -147,6 +152,8 @@ public class UserController {
             userDTO.setLastIp(ip);
             responseWrapper.setExtra("userInfo", userDTO);
 
+            // 用户信息存入redis
+            StpUtil.getSession().set("userInfo", userDTO);
             log.info(phone + "登录成功");
             return responseWrapper;
         } else {

@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2021-11-30
  */
 @RestController
-@RequestMapping("/loginRecord")
+@RequestMapping("/api/loginRecord")
 @Api(tags = "登录记录管理")
 public class LoginRecordController {
     private final ILoginRecordService loginRecordService;

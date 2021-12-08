@@ -165,6 +165,24 @@ public class UserController {
     }
 
     /**
+     * @description: 已经登录的用户获取ticket
+     * @author kuang
+     * @date: 2021/12/8
+     */
+    @SaCheckRole(
+            value = {ADMIN, USER},
+            mode = SaMode.OR)
+    @GetMapping("/ticket")
+    @ApiOperation(value = "已登录用户获取临时的ticket")
+    @ResponseBody
+    public ResponseWrapper getTicket() {
+        ResponseWrapper responseWrapper = ResponseWrapper.markSuccess();
+        String ticket = SaSsoUtil.createTicket(StpUtil.getLoginId());
+        responseWrapper.setExtra("ticket", ticket);
+        return responseWrapper;
+    }
+
+    /**
      * @description: 获取用户信息
      * @author kuang
      * @date: 2021/11/29

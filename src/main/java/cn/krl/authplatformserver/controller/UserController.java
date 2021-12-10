@@ -3,8 +3,6 @@ package cn.krl.authplatformserver.controller;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaCheckSafe;
 import cn.dev33.satoken.annotation.SaMode;
-import cn.dev33.satoken.config.SaTokenConfig;
-import cn.dev33.satoken.sso.SaSsoHandle;
 import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
@@ -19,12 +17,10 @@ import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IEmailService;
 import cn.krl.authplatformserver.service.ILoginRecordService;
 import cn.krl.authplatformserver.service.IUserService;
-import com.ejlchina.okhttps.OkHttps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -69,16 +65,6 @@ public class UserController {
         this.regexUtil = regexUtil;
         this.aliMessageUtil = aliMessageUtil;
         this.ipUtil = ipUtil;
-    }
-
-    /** 配置SSO相关参数 */
-    @Autowired
-    private void configSso(SaTokenConfig cfg) {
-        // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）
-        cfg.sso.setSendHttp(
-                url -> {
-                    return OkHttps.sync(url).get().getBody().toString();
-                });
     }
 
     /**
@@ -213,7 +199,7 @@ public class UserController {
     public ResponseWrapper checkTicket(
             @RequestParam String ticket, @RequestParam(required = false) String ssoLogoutCall) {
         ResponseWrapper responseWrapper;
-        Object loginId = SaSsoHandle.checkTicket(ticket, "/doLoginByTicket");
+        Object loginId = SaSsoUtil.checkTicket(ticket);
         if (loginId != null) {
             StpUtil.login(loginId);
             responseWrapper = ResponseWrapper.markSuccess();
@@ -241,7 +227,6 @@ public class UserController {
             log.error("用户不存在");
             return ResponseWrapper.markUserNotFoundError();
         }
-
         // 封装携带的参数
         UserDTO userInfo = userService.getInfo(id);
         responseWrapper = ResponseWrapper.markSuccess();
@@ -251,8 +236,8 @@ public class UserController {
 
     /**
      * @description 用户退出的接口
-     * @param loginId
-     * @param secretkey
+     * @param loginId 用户id
+     * @param secretkey sso密钥
      * @author kuang
      * @date 2021/12/10
      */

@@ -3,6 +3,8 @@ package cn.krl.authplatformserver.controller;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaCheckSafe;
 import cn.dev33.satoken.annotation.SaMode;
+import cn.dev33.satoken.config.SaTokenConfig;
+import cn.dev33.satoken.sso.SaSsoHandle;
 import cn.dev33.satoken.sso.SaSsoUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
@@ -17,10 +19,13 @@ import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IEmailService;
 import cn.krl.authplatformserver.service.ILoginRecordService;
 import cn.krl.authplatformserver.service.IUserService;
+import com.ejlchina.okhttps.OkHttps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +53,9 @@ public class UserController {
     private final IpUtil ipUtil;
     private final ILoginRecordService loginRecordService;
 
+    @Value("${sa-token.sso.secretkey}")
+    private String secretkey;
+
     public UserController(
             IUserService userService,
             IEmailService emailService,
@@ -61,6 +69,16 @@ public class UserController {
         this.regexUtil = regexUtil;
         this.aliMessageUtil = aliMessageUtil;
         this.ipUtil = ipUtil;
+    }
+
+    /** 配置SSO相关参数 */
+    @Autowired
+    private void configSso(SaTokenConfig cfg) {
+        // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）
+        cfg.sso.setSendHttp(
+                url -> {
+                    return OkHttps.sync(url).get().getBody().toString();
+                });
     }
 
     /**
@@ -183,6 +201,32 @@ public class UserController {
     }
 
     /**
+     * @description 通过签发的ticket进行登录
+     * @param ticket 票据
+     * @param ssoLogoutCall 单点注销时的回调通知地址，只在SSO模式三单点注销时需要携带此参数
+     * @author kuang
+     * @date 2021/12/10
+     */
+    @GetMapping("/doLoginByTicket")
+    @ApiOperation(value = "检查ticket")
+    @ResponseBody
+    public ResponseWrapper checkTicket(
+            @RequestParam String ticket, @RequestParam(required = false) String ssoLogoutCall) {
+        ResponseWrapper responseWrapper;
+        Object loginId = SaSsoHandle.checkTicket(ticket, "/doLoginByTicket");
+        if (loginId != null) {
+            StpUtil.login(loginId);
+            responseWrapper = ResponseWrapper.markSuccess();
+            responseWrapper.setExtra("id", loginId);
+            responseWrapper.setExtra("satoken", StpUtil.getTokenValue());
+        } else {
+            responseWrapper = ResponseWrapper.markInvalidTicketError();
+            log.error("ticket无效：" + ticket);
+        }
+        return responseWrapper;
+    }
+
+    /**
      * @description: 获取用户信息
      * @author kuang
      * @date: 2021/11/29
@@ -206,18 +250,31 @@ public class UserController {
     }
 
     /**
-     * @description 用户退出
-     * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
-     * @date 2021/11/16
+     * @description 用户退出的接口
+     * @param loginId
+     * @param secretkey
+     * @author kuang
+     * @date 2021/12/10
      */
     @SaCheckRole(
             value = {ADMIN, USER},
             mode = SaMode.OR)
     @GetMapping("/logout")
-    @ApiOperation(value = "用户退出")
+    @ApiOperation(value = "用户退出（单点注销）")
     @ResponseBody
-    public ResponseWrapper logout() {
-        StpUtil.logout();
+    public ResponseWrapper logout(
+            @RequestParam(required = false) String loginId,
+            @RequestParam(required = false) String secretkey) {
+        ResponseWrapper responseWrapper;
+        if (!secretkey.equals(this.secretkey)) {
+            log.error("sso密钥不匹配");
+            return ResponseWrapper.markSsoSecretkeyError();
+        }
+        if (loginId == null) {
+            StpUtil.logout();
+        } else {
+            StpUtil.logout(loginId);
+        }
         return ResponseWrapper.markSuccess();
     }
 

@@ -353,6 +353,22 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
+    /** 无效的ticket */
+    public static ResponseWrapper markInvalidTicketError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.INVALID_TICKET.getCode());
+        responseWrapper.setMsg(ResponseCode.INVALID_TICKET.getMsg());
+        return responseWrapper;
+    }
+
+    /** Sso密钥错误 */
+    public static ResponseWrapper markSsoSecretkeyError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.SSO_SECRETKEY_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.SSO_SECRETKEY_ERROR.getMsg());
+        return responseWrapper;
+    }
+
     /**
      * 包装ResponseWrapper
      *

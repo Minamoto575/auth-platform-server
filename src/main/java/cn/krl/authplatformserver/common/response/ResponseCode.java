@@ -52,6 +52,8 @@ public enum ResponseCode {
     DELETE_ADMIN_ERROR(428, "不能删除管理员"),
     NO_ROLE_ERROR(429, "没有对应角色"),
     NO_PERMISSION(430, "没有对应权限"),
+    INVALID_TICKET(431, "无效的ticket"),
+    SSO_SECRETKEY_ERROR(431, "Sso密钥错误"),
     SYSTEM_ERROR(500, "系统异常"),
     /** 900以上，判定为前端同一处理的异常 */
     API_NOT_PER(900, "没有该接口的访问权限");

@@ -1,4 +1,4 @@
-package cn.krl.authplatformserver.common.config;
+package cn.krl.authplatformserver.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

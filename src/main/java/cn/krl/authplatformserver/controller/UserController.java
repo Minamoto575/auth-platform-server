@@ -85,7 +85,7 @@ public class UserController {
             responseWrapper = ResponseWrapper.markRedirect();
         } else {
             log.info("用户登录状态查询：用户未登录");
-            responseWrapper = ResponseWrapper.markNOTLOGINError();
+            responseWrapper = ResponseWrapper.markNotLoginError();
         }
         if (ticket != null) {
             redirect = redirect + "?ticket=" + ticket;

@@ -94,7 +94,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
     /** 参数为空或者参数格式错误 */
-    public static ResponseWrapper markNOTLOGINError() {
+    public static ResponseWrapper markNotLoginError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.NOTLOGIN_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.NOTLOGIN_ERROR.getMsg());
@@ -133,11 +133,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 账号或者密码错误
-     *
-     * @return
-     */
+    /** 账号或者密码错误 */
     public static ResponseWrapper markAccountError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.ACCOUNT_ERROR.getCode());
@@ -221,11 +217,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 密码错误
-     *
-     * @return
-     */
+    /** 密码错误 */
     public static ResponseWrapper markPasswordError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.PASSWORD_ERROR.getCode());
@@ -233,11 +225,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 修改密码失败
-     *
-     * @return
-     */
+    /** 修改密码失败 */
     public static ResponseWrapper markChangePwdError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.CHANGEPWD_ERROR.getCode());
@@ -245,11 +233,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 修改电话失败
-     *
-     * @return
-     */
+    /** 修改电话失败 */
     public static ResponseWrapper markChangePhoneError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.CHANGEPHONE_ERROR.getCode());
@@ -257,11 +241,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 更新用户失败
-     *
-     * @return
-     */
+    /** 更新用户失败 */
     public static ResponseWrapper markUpdateUserError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.UPDATEUSER_ERROR.getCode());
@@ -269,11 +249,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 注册·失败
-     *
-     * @return
-     */
+    /** 注册·失败 */
     public static ResponseWrapper markRegisterError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.REGISTER_ERROR.getCode());
@@ -281,66 +257,42 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 上传图片失败
-     *
-     * @return
-     */
+    /** 上传图片失败 */
     public static ResponseWrapper markUploadImageError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.UPLOAD_IMAGE_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.UPLOAD_IMAGE_ERROR.getMsg());
         return responseWrapper;
     }
-    /**
-     * 子系统记录注册失败
-     *
-     * @return
-     */
+    /** 子系统记录注册失败 */
     public static ResponseWrapper markSubsystemRegisterError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.SUBSYSTEM_REGISTER_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.SUBSYSTEM_REGISTER_ERROR.getMsg());
         return responseWrapper;
     }
-    /**
-     * 子系统记录更新失败
-     *
-     * @return
-     */
+    /** 子系统记录更新失败 */
     public static ResponseWrapper markSubsystemUpdateError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.SUBSYSTEM_UPDATE_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.SUBSYSTEM_UPDATE_ERROR.getMsg());
         return responseWrapper;
     }
-    /**
-     * 子系统记录不存在
-     *
-     * @return
-     */
+    /** 子系统记录不存在 */
     public static ResponseWrapper markSubsystemNotFoundError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.SUBSYSTEM_NOT_FOUND_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.SUBSYSTEM_NOT_FOUND_ERROR.getMsg());
         return responseWrapper;
     }
-    /**
-     * 用户不存在
-     *
-     * @return
-     */
+    /** 用户不存在 */
     public static ResponseWrapper markUserNotFoundError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.USER_NOT_FOUND_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.USER_NOT_FOUND_ERROR.getMsg());
         return responseWrapper;
     }
-    /**
-     * 邮箱验证码检查出错
-     *
-     * @return
-     */
+    /** 邮箱验证码检查出错 */
     public static ResponseWrapper markEmailCodeCheckError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.EMAILCODE_CHECK_ERROR.getCode());
@@ -354,11 +306,7 @@ public class ResponseWrapper {
         responseWrapper.setMsg(ResponseCode.EMAIL_BIND_ERROR.getMsg());
         return responseWrapper;
     }
-    /**
-     * 用户名格式不合法
-     *
-     * @return
-     */
+    /** 用户名格式不合法 */
     public static ResponseWrapper markUsernameIllegalError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.USERNAME_ILLEGAL_ERROR.getCode());
@@ -366,11 +314,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 密码格式不合法
-     *
-     * @return
-     */
+    /** 密码格式不合法 */
     public static ResponseWrapper markPasswordIllegalError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.PASSWORD_ILLEGAL_ERROR.getCode());
@@ -378,11 +322,7 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 子系统名称为空
-     *
-     * @return
-     */
+    /** 子系统名称为空 */
     public static ResponseWrapper markSubsystemNameEmptyError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.SUBSYSTEM_NAME_EMPTY_ERROR.getCode());
@@ -390,15 +330,26 @@ public class ResponseWrapper {
         return responseWrapper;
     }
 
-    /**
-     * 子系统名称为空
-     *
-     * @return
-     */
+    /** 子系统名称为空 */
     public static ResponseWrapper markDeleteAdminError() {
         ResponseWrapper responseWrapper = new ResponseWrapper();
         responseWrapper.setCode(ResponseCode.DELETE_ADMIN_ERROR.getCode());
         responseWrapper.setMsg(ResponseCode.DELETE_ADMIN_ERROR.getMsg());
+        return responseWrapper;
+    }
+
+    /** 没有对应角色 */
+    public static ResponseWrapper markNoRoleError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.NO_ROLE_ERROR.getCode());
+        responseWrapper.setMsg(ResponseCode.NO_ROLE_ERROR.getMsg());
+        return responseWrapper;
+    }
+    /** 没有对应权限 */
+    public static ResponseWrapper markNoPermissionError() {
+        ResponseWrapper responseWrapper = new ResponseWrapper();
+        responseWrapper.setCode(ResponseCode.NO_PERMISSION.getCode());
+        responseWrapper.setMsg(ResponseCode.NO_PERMISSION.getMsg());
         return responseWrapper;
     }
 

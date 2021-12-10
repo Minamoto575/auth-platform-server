@@ -50,9 +50,12 @@ public enum ResponseCode {
     PASSWORD_ILLEGAL_ERROR(426, "密码格式不合法"),
     SUBSYSTEM_NAME_EMPTY_ERROR(427, "子系统名称为空"),
     DELETE_ADMIN_ERROR(428, "不能删除管理员"),
+    NO_ROLE_ERROR(429, "没有对应角色"),
+    NO_PERMISSION(430, "没有对应权限"),
     SYSTEM_ERROR(500, "系统异常"),
     /** 900以上，判定为前端同一处理的异常 */
     API_NOT_PER(900, "没有该接口的访问权限");
+
     private int code;
     private String msg;
 

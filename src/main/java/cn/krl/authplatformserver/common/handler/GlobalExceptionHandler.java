@@ -1,26 +1,46 @@
 package cn.krl.authplatformserver.common.handler;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author kuang
- * @description 全局异常捕获
- * @date 2021/11/11 17:29
+ * @description 全局异常拦截
+ * @date 2021/12/9 10:33
  */
-@RestControllerAdvice
-@Slf4j
+@ControllerAdvice
 public class GlobalExceptionHandler {
-    // 全局异常捕获
-    @ExceptionHandler
+
+    // 全局异常拦截（拦截项目中的所有异常）
     @ResponseBody
-    public ResponseWrapper handlerException(Exception e) {
-        // code=999为未考虑的响应码，具体看异常信息
-        log.error(e.getMessage());
+    @ExceptionHandler
+    public ResponseWrapper handlerException(
+            Exception e, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        // 打印堆栈，以供调试
+        System.out.println("----------全局异常----------");
         e.printStackTrace();
-        return ResponseWrapper.markDefault(999, e.getMessage());
+
+        // 不同异常返回不同状态码
+        ResponseWrapper rw;
+        if (e instanceof NotLoginException) { // 如果是未登录异常 402
+            rw = ResponseWrapper.markNotLoginError();
+        } else if (e instanceof NotRoleException) { // 如果是角色异常 429
+            rw = ResponseWrapper.markNoRoleError();
+        } else if (e instanceof NotPermissionException) { // 如果是权限异常 430
+            rw = ResponseWrapper.markNoPermissionError();
+        } else { // 系统异常 返回500
+            rw = ResponseWrapper.markSystemError();
+        }
+
+        return rw;
     }
 }

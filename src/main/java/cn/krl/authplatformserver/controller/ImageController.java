@@ -32,6 +32,7 @@ public class ImageController {
 
     /**
      * @description 图片上传的api
+     * @description 图片上传的api
      * @param upload: 要上传的图片
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
      * @date 2021/11/22

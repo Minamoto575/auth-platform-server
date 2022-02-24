@@ -67,6 +67,16 @@ public class UserController {
         this.ipUtil = ipUtil;
     }
 
+    // 配置SSO相关参数
+    // @Autowired
+    // private void configSso(SaTokenConfig cfg) {
+    //     // 配置 Http 请求处理器 （在模式三的单点注销功能下用到，如不需要可以注释掉）
+    //     cfg.sso.setSendHttp(
+    //             url -> {
+    //                 return OkHttps.sync(url).get().getBody().toString();
+    //             });
+    // }
+
     /**
      * @description 判断用户是否已经登录
      * @return: cn.krl.authplatformserver.common.response.ResponseWrapper
@@ -251,10 +261,10 @@ public class UserController {
             @RequestParam(required = false) String loginId,
             @RequestParam(required = false) String secretkey) {
         ResponseWrapper responseWrapper;
-        if (!secretkey.equals(this.secretkey)) {
-            log.error("sso密钥不匹配");
-            return ResponseWrapper.markSsoSecretkeyError();
-        }
+        // if (!secretkey.equals(this.secretkey)) {
+        //     log.error("sso密钥不匹配");
+        //     return ResponseWrapper.markSsoSecretkeyError();
+        // }
         if (loginId == null) {
             StpUtil.logout();
         } else {

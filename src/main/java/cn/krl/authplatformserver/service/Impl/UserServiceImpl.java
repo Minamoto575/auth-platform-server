@@ -103,14 +103,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void updateUser(UserUpdateDTO userUpdateDTO) {
         int id = userUpdateDTO.getId();
-        String password = userUpdateDTO.getPassword();
         User user = userMapper.selectById(id);
-        String salt = user.getSalt();
-        String hashedPwd = hashPassword(password, salt);
 
+        String password = userUpdateDTO.getPassword();
+        if (password != null) {
+            String salt = user.getSalt();
+            String hashedPwd = hashPassword(password, salt);
+            userUpdateDTO.setPassword(hashedPwd);
+        }
         BeanUtils.copyProperties(userUpdateDTO, user);
-        user.setPassword(hashedPwd);
-
         userMapper.updateById(user);
     }
 

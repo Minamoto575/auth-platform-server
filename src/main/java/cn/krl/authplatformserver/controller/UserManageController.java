@@ -69,6 +69,7 @@ public class UserManageController {
             log.info("用户:" + updateDTO.getId() + "更新成功");
             return ResponseWrapper.markSuccess();
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("用户:" + updateDTO.getId() + "更新失败");
             return ResponseWrapper.markUpdateUserError();
         }

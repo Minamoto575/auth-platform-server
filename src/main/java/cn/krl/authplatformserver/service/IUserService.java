@@ -1,9 +1,6 @@
 package cn.krl.authplatformserver.service;
 
-import cn.krl.authplatformserver.model.dto.UserDTO;
-import cn.krl.authplatformserver.model.dto.UserPageDTO;
-import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
-import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
+import cn.krl.authplatformserver.model.dto.*;
 import cn.krl.authplatformserver.model.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -166,4 +163,12 @@ public interface IUserService extends IService<User> {
      * @date: 2021/11/29
      */
     boolean userExists(Integer id);
+
+    /**
+     * @description 用户插入
+     * @param insertDTO
+     * @author kuang
+     * @date 2022/2/25
+     */
+    void insertUser(UserInsertDTO insertDTO);
 }

@@ -3,10 +3,7 @@ package cn.krl.authplatformserver.service.Impl;
 import cn.krl.authplatformserver.common.enums.Role;
 import cn.krl.authplatformserver.common.utils.SaltUtil;
 import cn.krl.authplatformserver.mapper.UserMapper;
-import cn.krl.authplatformserver.model.dto.UserDTO;
-import cn.krl.authplatformserver.model.dto.UserPageDTO;
-import cn.krl.authplatformserver.model.dto.UserRegisterDTO;
-import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
+import cn.krl.authplatformserver.model.dto.*;
 import cn.krl.authplatformserver.model.po.User;
 import cn.krl.authplatformserver.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -193,6 +190,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean userExists(Integer id) {
         User user = userMapper.selectById(id);
         return user != null;
+    }
+
+    @Override
+    public void insertUser(UserInsertDTO insertDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(insertDTO, user);
+        String salt = saltUtil.getSalt(10);
+        user.setSalt(salt);
+        String hashedPwd = hashPassword(insertDTO.getPassword(), salt);
+        user.setPassword(hashedPwd);
+        user.setDisabled(false);
+        user.setExpired(false);
+        List<String> roles = new ArrayList<>();
+        roles.add(Role.USER.getName());
+        user.setRoles(roles);
+        userMapper.insert(user);
     }
 
     /**

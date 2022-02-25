@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author kuang
@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank;
 public class UserUpdateDTO {
 
     @ApiModelProperty(value = "用户ID")
-    @NotBlank
+    @NotNull
     private Integer id;
 
     @ApiModelProperty(value = "电话")

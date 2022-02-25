@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.krl.authplatformserver.common.response.ResponseWrapper;
 import cn.krl.authplatformserver.common.utils.RegexUtil;
 import cn.krl.authplatformserver.model.dto.UserDTO;
+import cn.krl.authplatformserver.model.dto.UserInsertDTO;
 import cn.krl.authplatformserver.model.dto.UserPageDTO;
 import cn.krl.authplatformserver.model.dto.UserUpdateDTO;
 import cn.krl.authplatformserver.model.po.User;
@@ -70,6 +71,22 @@ public class UserManageController {
         } catch (Exception e) {
             log.error("用户:" + updateDTO.getId() + "更新失败");
             return ResponseWrapper.markUpdateUserError();
+        }
+    }
+
+    @SaCheckRole(value = ADMIN)
+    @PostMapping("/insert")
+    @ApiOperation(value = "用户插入(管理员使用)")
+    @ResponseBody
+    public ResponseWrapper insertUser(@RequestBody @Validated UserInsertDTO insertDTO) {
+        // 更新用户
+        try {
+            userService.insertUser(insertDTO);
+            log.info("用户插入成功");
+            return ResponseWrapper.markSuccess();
+        } catch (Exception e) {
+            log.error("用户插入失败");
+            return ResponseWrapper.markRegisterError();
         }
     }
 

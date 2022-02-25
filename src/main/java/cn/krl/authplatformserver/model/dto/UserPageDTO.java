@@ -27,6 +27,6 @@ public class UserPageDTO {
     @ApiModelProperty(value = "页的大小")
     private Integer size;
 
-    @ApiModelProperty(value = "子系统记录")
+    @ApiModelProperty(value = "用户列表")
     private List<UserDTO> users;
 }
